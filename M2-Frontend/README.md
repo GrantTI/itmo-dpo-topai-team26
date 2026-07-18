@@ -6,8 +6,7 @@
 
 | Занятие | Тема | Содержание | Форма занятия | Объем (а.ч.) | Компетенция | Индикатор | Уровень | КИМы |
 |:---:|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|
-| 2.1 | HTML. CSS. Javascript | Язык гипертекстовой разметки HTML. Каскадные таблицы стилей CSS. Базовый синтаксис JavaScript. | Л | 4 | LC-5 | LC-5.1 | Б | -  [Тест по HTML и CSS](https://github.com/GrantTI/itmo-dpo-topai-team26/blob/main/M2-Frontend/kim-01-test-html-css.md)
-
+| 2.1 | HTML. CSS. Javascript | Язык гипертекстовой разметки HTML. Каскадные таблицы стилей CSS. Базовый синтаксис JavaScript. | Л | 4 | LC-5 | LC-5.1 | Б | -  [Тест по HTML и CSS](https://github.com/GrantTI/itmo-dpo-topai-team26/blob/main/M2-Frontend/kim-01-test-html-css.md) 
 -  [Тест по Javascript](https://github.com/GrantTI/itmo-dpo-topai-team26/blob/main/M2-Frontend/kim-02-test-javascript.md) |
 | 2.1 | Фреймворк Vue.js | Vue.js 3: настройка Vite, Composition API, компоненты, маршрутизация. | Л | 2 | LC-5 | LC-5.1 | С | * |
 | 2.2 | Визуализация данных | Реализация загрузки файлов (csv, json). Предпросмотр данных и визуализация статистики. | ЛР | 4 | LC-5 | LC-5.1 | С | * |
