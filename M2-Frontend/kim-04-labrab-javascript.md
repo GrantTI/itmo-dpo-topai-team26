@@ -105,7 +105,6 @@ uvicorn server:app --reload
 <details>
 <summary><b>Пример решения</b></summary>
 
-    <details>
 ```html
 <!DOCTYPE html>
 <html lang="ru">
