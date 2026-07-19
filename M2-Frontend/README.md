@@ -25,3 +25,4 @@
 - https://metanit.com/web/javascript/ - курс по Javascript
 - https://ru.vuejs.org/guide/introduction.html - документация по Vue.js 3
 - https://www.chartjs.org - документация, примеры по библиотеке для построения графиков и дашбордов Chart.js
+- https://echarts.apache.org/en/index.html - документация, примеры по библиотеке для построения графиков и дашбордов Echarts
