@@ -88,3 +88,86 @@ bash
 pip install fastapi uvicorn
 uvicorn server:app --reload
 ```
+
+# Задание 1. Доступ к DOM-элементам и их стилизация
+
+**Описание:** Создайте страницу с несколькими элементами и измените их свойства через JavaScript.
+
+**Требования:**
+
+- Создайте блок `<div>` с текстом и кнопку.
+- При загрузке страницы измените цвет фона, размер шрифта и цвет текста блока.
+- Добавьте обработчик, который скрывает/показывает блок при клике на кнопку.
+- Измените стиль элемента при наведении мыши.
+
+**Пример решения:**
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 1</title>
+    <style>
+        #myBlock {
+            padding: 20px;
+            margin: 10px 0;
+            border: 2px solid #333;
+            transition: all 0.3s;
+        }
+        .highlight {
+            background-color: yellow !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Задание 1: Работа с DOM</h1>
+    <div id="myBlock">Это блок для стилизации</div>
+    <button id="toggleBtn">Скрыть/Показать</button>
+    <button id="highlightBtn">Подсветить</button>
+
+    <script>
+        // Получение элементов
+        const block = document.getElementById('myBlock');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const highlightBtn = document.getElementById('highlightBtn');
+
+        // Стилизация при загрузке
+        window.addEventListener('DOMContentLoaded', () => {
+            block.style.backgroundColor = '#f0f8ff';
+            block.style.color = '#2c3e50';
+            block.style.fontSize = '18px';
+            block.style.fontWeight = 'bold';
+            block.style.borderRadius = '8px';
+        });
+
+        // Скрытие/показ блока
+        toggleBtn.addEventListener('click', () => {
+            if (block.style.display === 'none') {
+                block.style.display = 'block';
+                toggleBtn.textContent = 'Скрыть';
+            } else {
+                block.style.display = 'none';
+                toggleBtn.textContent = 'Показать';
+            }
+        });
+
+        // Добавление/удаление класса
+        highlightBtn.addEventListener('click', () => {
+            block.classList.toggle('highlight');
+        });
+
+        // События наведения
+        block.addEventListener('mouseenter', () => {
+            block.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            block.style.transform = 'scale(1.02)';
+        });
+
+        block.addEventListener('mouseleave', () => {
+            block.style.boxShadow = 'none';
+            block.style.transform = 'scale(1)';
+        });
+    </script>
+</body>
+</html>
+```
