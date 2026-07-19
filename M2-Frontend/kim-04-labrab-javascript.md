@@ -619,4 +619,265 @@ uvicorn server:app --reload
     </script>
 </body>
 </html>
+```
+</details>
+
+# Задание 5. Обработка onfocus и onblur на текстовых полях
+
+**Описание:** Создайте текстовые поля и обрабатывайте события получения и потери фокуса.
+
+**Требования:**
+
+- Создайте несколько текстовых полей (`<input type="text">` и `<textarea>`).
+- При получении фокуса подсвечивайте поле (изменяйте рамку или фон).
+- При потере фокуса проверяйте содержимое поля.
+- Добавьте валидацию (например, минимальная длина).
+
+<details>
+<summary><b>Пример решения</b></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 5</title>
+    <style>
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+        .form-group input.focused,
+        .form-group textarea.focused {
+            background-color: #f0f8ff;
+            border-color: #2ecc71;
+        }
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: #e74c3c;
+            background-color: #fff5f5;
+        }
+        .form-group input.valid,
+        .form-group textarea.valid {
+            border-color: #2ecc71;
+            background-color: #f0fff4;
+        }
+        .form-group .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+            display: block;
+        }
+        .form-group .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            display: none;
+            margin-top: 5px;
+        }
+        .form-group .error-message.show {
+            display: block;
+        }
+        #focusLog {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        #focusLog div {
+            padding: 3px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .submit-btn {
+            padding: 12px 30px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Задание 5: Фокус и валидация</h1>
+    
+    <form id="myForm">
+        <div class="form-group">
+            <label for="username">Имя пользователя (минимум 3 символа):</label>
+            <input type="text" id="username" name="username" placeholder="Введите имя">
+            <span class="hint">Минимум 3 символа, только буквы</span>
+            <span class="error-message" id="usernameError">Имя должно содержать минимум 3 буквы</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" placeholder="example@mail.ru">
+            <span class="hint">Введите корректный email</span>
+            <span class="error-message" id="emailError">Введите корректный email</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="comment">Комментарий:</label>
+            <textarea id="comment" name="comment" rows="4" placeholder="Введите ваш комментарий..."></textarea>
+            <span class="hint">Минимум 10 символов</span>
+            <span class="error-message" id="commentError">Комментарий должен быть минимум 10 символов</span>
+        </div>
+        
+        <button type="submit" class="submit-btn">Отправить</button>
+    </form>
+    
+    <h3>Лог фокуса:</h3>
+    <div id="focusLog"></div>
+
+    <script>
+        const username = document.getElementById('username');
+        const email = document.getElementById('email');
+        const comment = document.getElementById('comment');
+        const logContainer = document.getElementById('focusLog');
+        const form = document.getElementById('myForm');
+        
+        const errors = {
+            username: document.getElementById('usernameError'),
+            email: document.getElementById('emailError'),
+            comment: document.getElementById('commentError')
+        };
+
+        let focusLog = [];
+
+        function addLogEntry(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            focusLog.push(`[${timestamp}] ${message}`);
+            
+            if (focusLog.length > 50) {
+                focusLog.shift();
+            }
+            
+            logContainer.innerHTML = '';
+            focusLog.slice().reverse().forEach(entry => {
+                const div = document.createElement('div');
+                div.textContent = entry;
+                logContainer.appendChild(div);
+            });
+        }
+
+        function validateField(field, validator, errorElement) {
+            if (validator(field.value)) {
+                field.classList.remove('error');
+                field.classList.add('valid');
+                errorElement.classList.remove('show');
+                return true;
+            } else {
+                field.classList.remove('valid');
+                field.classList.add('error');
+                errorElement.classList.add('show');
+                return false;
+            }
+        }
+
+        // Валидаторы
+        const validators = {
+            username: (value) => /^[а-яА-Яa-zA-Z]{3,}$/.test(value),
+            email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+            comment: (value) => value.trim().length >= 10
+        };
+
+        // Обработка фокуса
+        function handleFocus(event) {
+            const field = event.target;
+            field.classList.add('focused');
+            addLogEntry(`Фокус на ${field.name || field.id}`);
+        }
+
+        // Обработка потери фокуса
+        function handleBlur(event) {
+            const field = event.target;
+            field.classList.remove('focused');
+            
+            const validator = validators[field.id];
+            const errorElement = errors[field.id];
+            
+            if (validator && field.value.trim() !== '') {
+                validateField(field, validator, errorElement);
+                const isValid = validator(field.value);
+                addLogEntry(`Потеря фокуса с ${field.name || field.id}: ${isValid ? '✓ OK' : '✗ Ошибка'}`);
+            } else {
+                addLogEntry(`Потеря фокуса с ${field.name || field.id}`);
+            }
+        }
+
+        // Добавление обработчиков
+        [username, email, comment].forEach(field => {
+            field.addEventListener('focus', handleFocus);
+            field.addEventListener('blur', handleBlur);
+        });
+
+        // Валидация при вводе
+        username.addEventListener('input', () => {
+            if (username.value.trim() !== '') {
+                validateField(username, validators.username, errors.username);
+            }
+        });
+        
+        email.addEventListener('input', () => {
+            if (email.value.trim() !== '') {
+                validateField(email, validators.email, errors.email);
+            }
+        });
+        
+        comment.addEventListener('input', () => {
+            if (comment.value.trim() !== '') {
+                validateField(comment, validators.comment, errors.comment);
+            }
+        });
+
+        // Отправка формы
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            
+            const isUsernameValid = validateField(username, validators.username, errors.username);
+            const isEmailValid = validateField(email, validators.email, errors.email);
+            const isCommentValid = validateField(comment, validators.comment, errors.comment);
+            
+            if (isUsernameValid && isEmailValid && isCommentValid) {
+                addLogEntry('✅ Форма успешно отправлена!');
+                alert('Форма отправлена!');
+            } else {
+                addLogEntry('❌ Ошибка валидации формы');
+                alert('Пожалуйста, исправьте ошибки в форме.');
+            }
+        });
+    </script>
+</body>
+</html>
+```
+</details>
+
 
