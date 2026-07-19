@@ -58,7 +58,7 @@
 |---|---|---|
 | Лабораторная работа: подключение сервиса инференса | 3.3 | [kim-01-labrab-inference-client.md](kim-01-labrab-inference-client.md) |
 | Лабораторная работа: развёртывание в production-контуре | 3.4 | [kim-02-labrab-production-compose.md](kim-02-labrab-production-compose.md) |
-| Лабораторная работа: reverse-proxy и multi-stage сборка | 3.5 | — |
+| Лабораторная работа: reverse-proxy и multi-stage сборка | 3.5 | [kim-03-labrab-nginx-multistage.md](kim-03-labrab-nginx-multistage.md) |
 | Самостоятельная работа: контейнеризация собственного проекта | 3.6 | — |
 
 Приложения к КИМ размещаются в каталоге [`attachments/`](attachments/).
@@ -70,6 +70,7 @@ M3-integration-deployment/
 ├── README.md
 ├── kim-01-labrab-inference-client.md
 ├── kim-02-labrab-production-compose.md
+├── kim-03-labrab-nginx-multistage.md
 └── attachments/
     └── .gitkeep
 ```
