@@ -22,3 +22,4 @@
 ## Материалы для подготовки к тесам
 - https://htmlbook.ru - материалы для подготовки по html и css
 - https://learn.javascript.ru - учебник по Javascript
+- https://metanit.com/web/javascript/ - курс по Javascript
