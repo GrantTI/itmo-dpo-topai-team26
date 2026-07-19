@@ -250,3 +250,36 @@
         <option value="travel">Путешествия</option>
     </select>
 </div>
+```
+
+# Задание 8. Поле для загрузки файлов
+
+**Описание:** Добавьте поле для загрузки файлов и кнопку отправки формы.
+
+**Требования:**
+
+- Поле для загрузки файлов (`<input type="file">`).
+- Ограничение на тип файлов (атрибут `accept`).
+- Кнопка отправки формы (`<input type="submit">`).
+- Кнопка сброса формы (`<input type="reset">`).
+
+**Пример:**
+
+```html
+<h2>Загрузка файлов</h2>
+<form action="#" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="avatar">Загрузите аватар:</label>
+        <input type="file" id="avatar" name="avatar" accept=".jpg,.jpeg,.png,.gif">
+    </div>
+    
+    <div>
+        <label for="doc">Загрузите документ (PDF):</label>
+        <input type="file" id="doc" name="doc" accept=".pdf">
+    </div>
+    
+    <div>
+        <input type="submit" value="Отправить">
+        <input type="reset" value="Очистить">
+    </div>
+</form>
