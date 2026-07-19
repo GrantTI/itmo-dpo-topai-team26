@@ -370,3 +370,95 @@ ul ul {
     margin-left: 20px;
 }
 ```
+
+# Задание 10. Стилизация элементов форм при взаимодействии
+
+**Описание:** Добавьте стили для интерактивных состояний элементов формы.
+
+**Требования:**
+
+- Стилизация полей ввода при наведении мышью (`:hover`).
+- Стилизация полей ввода при фокусе (`:focus`).
+- Изменение цвета плейсхолдеров.
+- Стилизация кнопок при наведении и нажатии.
+- Стилизация чекбоксов и радиокнопок (кастомные).
+
+**Пример CSS (продолжение):**
+
+```css
+/* Стили для полей при наведении */
+input:hover, textarea:hover, select:hover {
+    border-color: #3498db;
+    background-color: #f0f8ff;
+}
+
+/* Стили для полей при фокусе */
+input:focus, textarea:focus, select:focus {
+    border-color: #2980b9;
+    outline: none;
+    box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+    background-color: #fff;
+}
+
+/* Стили для плейсхолдеров */
+::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+input:focus::placeholder, textarea:focus::placeholder {
+    color: #bbb;
+    opacity: 0.5;
+}
+
+/* Стили для кнопок */
+input[type="submit"], input[type="reset"] {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.3s;
+    width: auto;
+}
+
+input[type="submit"]:hover {
+    background-color: #2980b9;
+    transform: scale(1.02);
+}
+
+input[type="reset"] {
+    background-color: #95a5a6;
+}
+
+input[type="reset"]:hover {
+    background-color: #7f8c8d;
+}
+
+input[type="submit"]:active, input[type="reset"]:active {
+    transform: scale(0.98);
+}
+
+/* Кастомные чекбоксы и радиокнопки */
+input[type="checkbox"], input[type="radio"] {
+    width: auto;
+    margin-right: 8px;
+    accent-color: #3498db;
+    transform: scale(1.2);
+}
+
+input[type="checkbox"]:hover, input[type="radio"]:hover {
+    cursor: pointer;
+    transform: scale(1.3);
+}
+
+/* Стили для полей с ошибкой (валидация) */
+input:invalid, textarea:invalid {
+    border-color: #e74c3c;
+}
+
+input:valid, textarea:valid {
+    border-color: #2ecc71;
+}
