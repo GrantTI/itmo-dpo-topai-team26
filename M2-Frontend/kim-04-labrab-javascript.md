@@ -880,4 +880,251 @@ uvicorn server:app --reload
 ```
 </details>
 
+# Задание 6. Изменение типа поля input (text ↔ password)
+
+**Описание:** Создайте поле для ввода пароля с возможностью переключения видимости.
+
+**Требования:**
+
+- Создайте поле `<input type="password">`.
+- Добавьте кнопку/чекбокс для переключения типа поля на text и обратно.
+- Реализуйте индикатор сложности пароля.
+- Добавьте визуальную обратную связь при переключении.
+
+<details>
+<summary><b>Пример решения</b></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 6</title>
+    <style>
+        .password-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper input {
+            flex: 1;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .password-wrapper input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+        .toggle-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+        }
+        .toggle-btn:hover {
+            transform: scale(1.1);
+        }
+        .toggle-btn:active {
+            transform: scale(0.9);
+        }
+        .strength-meter {
+            margin-top: 15px;
+            height: 8px;
+            background-color: #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .strength-meter .fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.5s;
+            border-radius: 4px;
+        }
+        .strength-text {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+        .requirements {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .requirements .req {
+            padding: 3px 0;
+            color: #999;
+        }
+        .requirements .req.done {
+            color: #2ecc71;
+        }
+        .requirements .req.fail {
+            color: #e74c3c;
+        }
+        .status-icon {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="password-container">
+        <h1>Задание 6: Переключение пароля</h1>
+        
+        <div class="password-wrapper">
+            <input type="password" id="passwordInput" placeholder="Введите пароль">
+            <button class="toggle-btn" id="toggleBtn">👁️</button>
+        </div>
+        
+        <div class="strength-meter">
+            <div class="fill" id="strengthFill"></div>
+        </div>
+        <div class="strength-text" id="strengthText">Введите пароль</div>
+        
+        <div class="requirements">
+            <div class="req" id="reqLength">
+                <span class="status-icon">❌</span> Минимум 8 символов
+            </div>
+            <div class="req" id="reqLower">
+                <span class="status-icon">❌</span> Строчная буква
+            </div>
+            <div class="req" id="reqUpper">
+                <span class="status-icon">❌</span> Заглавная буква
+            </div>
+            <div class="req" id="reqDigit">
+                <span class="status-icon">❌</span> Цифра
+            </div>
+            <div class="req" id="reqSpecial">
+                <span class="status-icon">❌</span> Специальный символ
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('passwordInput');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
+        
+        const reqs = {
+            length: document.getElementById('reqLength'),
+            lower: document.getElementById('reqLower'),
+            upper: document.getElementById('reqUpper'),
+            digit: document.getElementById('reqDigit'),
+            special: document.getElementById('reqSpecial')
+        };
+
+        let isPasswordVisible = false;
+
+        // Переключение видимости
+        toggleBtn.addEventListener('click', () => {
+            isPasswordVisible = !isPasswordVisible;
+            passwordInput.type = isPasswordVisible ? 'text' : 'password';
+            toggleBtn.textContent = isPasswordVisible ? '🙈' : '👁️';
+            
+            // Анимация
+            passwordInput.style.transition = 'all 0.3s';
+            passwordInput.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                passwordInput.style.transform = 'scale(1)';
+            }, 200);
+        });
+
+        // Проверка сложности пароля
+        function checkPasswordStrength(password) {
+            const checks = {
+                length: password.length >= 8,
+                lower: /[a-zа-я]/.test(password),
+                upper: /[A-ZА-Я]/.test(password),
+                digit: /\d/.test(password),
+                special: /[!@#$%^&*()_+\-=\[\]{};:'",.<>/?]/.test(password)
+            };
+
+            // Обновление требований
+            for (const [key, value] of Object.entries(checks)) {
+                const req = reqs[key];
+                if (req) {
+                    const icon = req.querySelector('.status-icon');
+                    if (value) {
+                        req.classList.add('done');
+                        req.classList.remove('fail');
+                        icon.textContent = '✅';
+                    } else {
+                        req.classList.remove('done');
+                        req.classList.add('fail');
+                        icon.textContent = '❌';
+                    }
+                }
+            }
+
+            // Расчет силы пароля
+            let score = 0;
+            for (const [key, value] of Object.entries(checks)) {
+                if (value) score++;
+            }
+
+            const strengthLevels = [
+                { min: 0, label: 'Очень слабый', color: '#e74c3c', width: '20%' },
+                { min: 1, label: 'Слабый', color: '#e67e22', width: '40%' },
+                { min: 2, label: 'Средний', color: '#f39c12', width: '60%' },
+                { min: 3, label: 'Хороший', color: '#2ecc71', width: '80%' },
+                { min: 4, label: 'Сильный', color: '#2ecc71', width: '100%' },
+                { min: 5, label: 'Очень сильный', color: '#27ae60', width: '100%' }
+            ];
+
+            let strength = strengthLevels[0];
+            for (const level of strengthLevels) {
+                if (score >= level.min && score >= strength.min) {
+                    strength = level;
+                }
+            }
+
+            // Если пароль пустой
+            if (password.length === 0) {
+                strength = { label: 'Введите пароль', color: '#ddd', width: '0%' };
+            }
+
+            return { score, strength, checks };
+        }
+
+        // Обновление индикатора
+        function updateStrength(password) {
+            const result = checkPasswordStrength(password);
+            const { strength } = result;
+
+            strengthFill.style.width = strength.width;
+            strengthFill.style.backgroundColor = strength.color;
+            strengthText.textContent = strength.label;
+            strengthText.style.color = strength.color;
+        }
+
+        passwordInput.addEventListener('input', (event) => {
+            updateStrength(event.target.value);
+        });
+
+        // Инициализация
+        updateStrength('');
+    </script>
+</body>
+</html>
+```
+</details>
+
 
