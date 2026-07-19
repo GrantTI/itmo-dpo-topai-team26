@@ -102,8 +102,10 @@ uvicorn server:app --reload
 - Добавьте обработчик, который скрывает/показывает блок при клике на кнопку.
 - Измените стиль элемента при наведении мыши.
 
-**Пример решения:**
+<details>
+<summary><b>Пример решения</b></summary>
 
+    <details>
 ```html
 <!DOCTYPE html>
 <html lang="ru">
@@ -173,6 +175,7 @@ uvicorn server:app --reload
 </body>
 </html>
 ```
+</details>
 
 # Задание 2. Обработка групп элементов по классам
 
@@ -454,5 +457,4 @@ uvicorn server:app --reload
 ```
 </details>
     
-</details>
 
