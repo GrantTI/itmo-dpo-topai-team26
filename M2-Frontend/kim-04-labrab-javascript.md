@@ -457,5 +457,166 @@ uvicorn server:app --reload
 </html>
 ```
 </details>
-    
+
+# Задание 4. Обработка события onchange на select
+
+**Описание:** Создайте выпадающий список и обрабатывайте изменение его значения.
+
+**Требования:**
+
+- Создайте `<select>` с вариантами выбора (например, города или цвета).
+- При изменении выбранного значения меняйте фон страницы или стиль блока.
+- Отображайте выбранное значение на странице.
+
+<details>
+<summary><b>Пример решения</b></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 4</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.5s;
+        }
+        .color-preview {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: background-color 0.5s;
+            background-color: #3498db;
+        }
+        .info {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        select {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px auto;
+            display: block;
+            cursor: pointer;
+        }
+        select:hover {
+            border-color: #3498db;
+        }
+        select:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+        .history {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+        .history-item {
+            padding: 3px 0;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Задание 4: Выбор цвета</h1>
+        
+        <label for="colorSelect">Выберите цвет:</label>
+        <select id="colorSelect">
+            <option value="#3498db">Синий</option>
+            <option value="#2ecc71">Зеленый</option>
+            <option value="#e74c3c">Красный</option>
+            <option value="#f39c12">Оранжевый</option>
+            <option value="#9b59b6">Фиолетовый</option>
+            <option value="#ecf0f1">Светлый</option>
+            <option value="#2c3e50">Темный</option>
+        </select>
+        
+        <div class="color-preview" id="colorPreview"></div>
+        <div class="info" id="selectedInfo">Выбран: Синий (#3498db)</div>
+        
+        <h3>История выборов:</h3>
+        <div class="history" id="historyContainer"></div>
+    </div>
+
+    <script>
+        const select = document.getElementById('colorSelect');
+        const preview = document.getElementById('colorPreview');
+        const info = document.getElementById('selectedInfo');
+        const historyContainer = document.getElementById('historyContainer');
+        
+        let history = [];
+        let colorNames = {
+            '#3498db': 'Синий',
+            '#2ecc71': 'Зеленый',
+            '#e74c3c': 'Красный',
+            '#f39c12': 'Оранжевый',
+            '#9b59b6': 'Фиолетовый',
+            '#ecf0f1': 'Светлый',
+            '#2c3e50': 'Темный'
+        };
+
+        function updateUI(color, name) {
+            preview.style.backgroundColor = color;
+            info.textContent = `Выбран: ${name} (${color})`;
+            document.querySelector('.container').style.backgroundColor = 
+                color === '#ecf0f1' ? '#2c3e50' : 
+                color === '#2c3e50' ? '#ecf0f1' : 
+                '#ffffff';
+            document.querySelector('.container').style.color = 
+                color === '#ecf0f1' || color === '#2c3e50' ? '#ffffff' : '#2c3e50';
+        }
+
+        function addHistoryEntry(color, name) {
+            const timestamp = new Date().toLocaleTimeString();
+            history.push({ color, name, timestamp });
+            
+            if (history.length > 20) {
+                history.shift();
+            }
+            
+            historyContainer.innerHTML = '';
+            history.slice().reverse().forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <span style="display:inline-block;width:20px;height:20px;
+                                background-color:${entry.color};
+                                border-radius:4px;vertical-align:middle;margin-right:10px;"></span>
+                    ${entry.name} (${entry.color}) - ${entry.timestamp}
+                `;
+                historyContainer.appendChild(div);
+            });
+        }
+
+        select.addEventListener('change', (event) => {
+            const color = event.target.value;
+            const name = colorNames[color] || 'Неизвестный цвет';
+            updateUI(color, name);
+            addHistoryEntry(color, name);
+        });
+
+        // Инициализация
+        updateUI('#3498db', 'Синий');
+        addHistoryEntry('#3498db', 'Синий');
+    </script>
+</body>
+</html>
 
