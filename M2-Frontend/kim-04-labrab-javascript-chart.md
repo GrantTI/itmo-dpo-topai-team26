@@ -18,14 +18,14 @@
 ### Структура проекта
 
 lab-javascript/
-├── index.html
-├── style.css
-├── script.js
-├── data/
-│   ├── sample.txt
-│   └── sample.csv
-├── server.py
-└── README.md
+├── index.html 
+├── style.css 
+├── script.js 
+├── data/ 
+│   ├── sample.txt 
+│   └── sample.csv 
+├── server.py 
+└── README.md 
 
 Настройка FastAPI сервера (для заданий 8-10)
 server.py:
