@@ -19,7 +19,8 @@
 
 ---
 
-## Материалы для подготовки к тесам
+## Материалы для подготовки к тестам
 - https://htmlbook.ru - материалы для подготовки по html и css
 - https://learn.javascript.ru - учебник по Javascript
 - https://metanit.com/web/javascript/ - курс по Javascript
+- https://ru.vuejs.org/guide/introduction.html - документация по Vue.js 3
