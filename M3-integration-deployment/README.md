@@ -57,7 +57,7 @@
 | КИМ | Связь с занятием | Файл |
 |---|---|---|
 | Лабораторная работа: подключение сервиса инференса | 3.3 | [kim-01-labrab-inference-client.md](kim-01-labrab-inference-client.md) |
-| Лабораторная работа: развёртывание в production-контуре | 3.4 | — |
+| Лабораторная работа: развёртывание в production-контуре | 3.4 | [kim-02-labrab-production-compose.md](kim-02-labrab-production-compose.md) |
 | Лабораторная работа: reverse-proxy и multi-stage сборка | 3.5 | — |
 | Самостоятельная работа: контейнеризация собственного проекта | 3.6 | — |
 
@@ -69,6 +69,7 @@
 M3-integration-deployment/
 ├── README.md
 ├── kim-01-labrab-inference-client.md
+├── kim-02-labrab-production-compose.md
 └── attachments/
     └── .gitkeep
 ```
