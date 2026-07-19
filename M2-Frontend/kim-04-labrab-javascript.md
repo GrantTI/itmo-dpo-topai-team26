@@ -296,3 +296,163 @@ uvicorn server:app --reload
 </body>
 </html>
 ```
+
+# Задание 3. Обработка события onclick на гиперссылке
+
+**Описание:** Создайте несколько гиперссылок и обработайте клики по ним.
+
+**Требования:**
+
+- Создайте 3-4 ссылки с разными URL.
+- При клике на ссылку предотвращайте переход по ней.
+- Выводите информацию о клике в консоль и на страницу.
+- Реализуйте подсчет кликов по каждой ссылке.
+
+<details>
+<summary><b>Пример решения</b></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 3</title>
+    <style>
+        .link-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .link-item:hover {
+            background-color: #e9ecef;
+        }
+        .link-item a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .link-item a:hover {
+            text-decoration: underline;
+        }
+        .link-stats {
+            margin-left: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        #logContainer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        #logContainer div {
+            padding: 3px 0;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Задание 3: Обработка ссылок</h1>
+    
+    <div id="linksContainer"></div>
+    <button id="clearLogBtn">Очистить лог</button>
+    
+    <h3>Лог кликов:</h3>
+    <div id="logContainer"></div>
+
+    <script>
+        const links = [
+            { text: 'Google', url: 'https://google.com' },
+            { text: 'GitHub', url: 'https://github.com' },
+            { text: 'MDN', url: 'https://developer.mozilla.org' },
+            { text: 'YouTube', url: 'https://youtube.com' }
+        ];
+
+        const linksContainer = document.getElementById('linksContainer');
+        const logContainer = document.getElementById('logContainer');
+        const clearLogBtn = document.getElementById('clearLogBtn');
+
+        let clickLog = [];
+        let clickStats = {};
+
+        // Функция добавления записи в лог
+        function addLogEntry(text, url) {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = `[${timestamp}] Клик по ссылке: "${text}" (${url})`;
+            clickLog.push(entry);
+            
+            // Обновление статистики
+            clickStats[text] = (clickStats[text] || 0) + 1;
+            
+            renderLog();
+            renderStats();
+        }
+
+        // Отображение лога
+        function renderLog() {
+            logContainer.innerHTML = '';
+            clickLog.slice(-20).forEach(entry => {
+                const div = document.createElement('div');
+                div.textContent = entry;
+                logContainer.appendChild(div);
+            });
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Отображение статистики
+        function renderStats() {
+            const statElements = document.querySelectorAll('.link-stats');
+            statElements.forEach(el => {
+                const text = el.dataset.linkText;
+                el.textContent = `Кликов: ${clickStats[text] || 0}`;
+            });
+        }
+
+        // Создание ссылок
+        links.forEach((link, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'link-item';
+            
+            const a = document.createElement('a');
+            a.href = link.url;
+            a.textContent = link.text;
+            a.target = '_blank';
+            
+            const stats = document.createElement('span');
+            stats.className = 'link-stats';
+            stats.dataset.linkText = link.text;
+            stats.textContent = 'Кликов: 0';
+            
+            wrapper.appendChild(a);
+            wrapper.appendChild(stats);
+            linksContainer.appendChild(wrapper);
+
+            // Обработка клика
+            a.addEventListener('click', (event) => {
+                event.preventDefault();
+                addLogEntry(link.text, link.url);
+            });
+        });
+
+        // Очистка лога
+        clearLogBtn.addEventListener('click', () => {
+            clickLog = [];
+            clickStats = {};
+            renderLog();
+            renderStats();
+        });
+    </script>
+</body>
+</html>
+```
+</details>
+    
+</details>
+
