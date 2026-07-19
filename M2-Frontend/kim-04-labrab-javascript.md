@@ -88,6 +88,8 @@ bash
 pip install fastapi uvicorn
 uvicorn server:app --reload
 ```
+</details>
+
 
 # Задание 1. Доступ к DOM-элементам и их стилизация
 
