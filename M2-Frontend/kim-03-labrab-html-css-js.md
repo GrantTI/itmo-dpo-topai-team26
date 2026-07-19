@@ -90,3 +90,30 @@
         </ul>
     </li>
 </ul>
+
+
+# Задание 3. Создание гиперссылок
+
+**Описание:** Создайте несколько гиперссылок разного типа.
+
+**Требования:**
+
+- Ссылка на внешний сайт (например, https://developer.mozilla.org).
+- Ссылка на внутреннюю страницу (например, page2.html).
+- Ссылка на раздел текущей страницы (якорь).
+- Ссылка для отправки email (mailto:).
+- Все ссылки должны открываться в новой вкладке (атрибут `target="_blank"`).
+
+**Пример:**
+
+```html
+<h2>Полезные ссылки</h2>
+<ul>
+    <li><a href="https://developer.mozilla.org/ru/" target="_blank">MDN Web Docs</a></li>
+    <li><a href="page2.html" target="_blank">Страница 2</a></li>
+    <li><a href="#section1" target="_blank">Перейти к разделу 1</a></li>
+    <li><a href="mailto:example@mail.ru" target="_blank">Написать письмо</a></li>
+</ul>
+
+<h2 id="section1">Раздел 1</h2>
+<p>Содержание раздела...</p>
