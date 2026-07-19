@@ -1749,3 +1749,379 @@ uvicorn server:app --reload
 </html>
 ```
 </details>
+
+# Задание 9. Визуализация данных с помощью Canvas
+
+**Описание:** Создайте простую визуализацию загруженных данных с использованием Canvas.
+
+**Требования:**
+
+- Загрузите данные (можно использовать данные из CSV).
+- Создайте столбчатую диаграмму на Canvas.
+- Добавьте подписи осей и значений.
+- Реализуйте интерактивность (подсветка столбцов при наведении).
+
+<details>
+<summary><b>Пример решения</b></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 9</title>
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .controls button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .controls button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        .controls button:active {
+            transform: scale(0.95);
+        }
+        .controls button.active {
+            background-color: #2ecc71;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        #tooltip {
+            position: fixed;
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Задание 9: Визуализация данных</h1>
+        
+        <div class="controls">
+            <button id="chartBar" class="active">📊 Столбчатая</button>
+            <button id="chartLine">📈 Линейная</button>
+            <button id="chartArea">📉 Области</button>
+            <button id="refreshDataBtn">🔄 Обновить</button>
+        </div>
+        
+        <div class="legend" id="legend"></div>
+        
+        <canvas id="chartCanvas" width="900" height="400"></canvas>
+        
+        <div id="tooltip"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('chartCanvas');
+        const ctx = canvas.getContext('2d');
+        const tooltip = document.getElementById('tooltip');
+        
+        let chartData = [];
+        let chartType = 'bar';
+        
+        const colors = [
+            '#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6',
+            '#1abc9c', '#e67e22', '#2c3e50', '#16a085', '#c0392b'
+        ];
+
+        // Генерация данных (можно заменить на реальные из CSV)
+        function generateData() {
+            const names = ['Анна', 'Борис', 'Виктория', 'Глеб', 'Дарья', 
+                          'Евгений', 'Жанна', 'Иван', 'Кирилл', 'Лариса'];
+            const values = names.map(() => Math.floor(Math.random() * 40) + 60);
+            return names.map((name, index) => ({
+                label: name,
+                value: values[index]
+            }));
+        }
+
+        // Рисование диаграммы
+        function drawChart(data, type) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = { top: 40, right: 40, bottom: 60, left: 60 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            if (data.length === 0) {
+                ctx.fillStyle = '#999';
+                ctx.font = '18px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Нет данных для отображения', width / 2, height / 2);
+                return;
+            }
+
+            // Определение максимального значения
+            const maxValue = Math.max(...data.map(d => d.value), 10);
+            const barWidth = chartWidth / data.length * 0.7;
+            const gap = chartWidth / data.length;
+
+            // Отрисовка сетки
+            ctx.strokeStyle = '#eee';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + chartHeight - (i / 4) * chartHeight;
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                
+                ctx.fillStyle = '#999';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'right';
+                ctx.fillText(Math.round((i / 4) * maxValue), padding.left - 10, y + 4);
+            }
+            ctx.stroke();
+
+            // Отрисовка данных
+            data.forEach((item, index) => {
+                const x = padding.left + index * gap + (gap - barWidth) / 2;
+                const barHeight = (item.value / maxValue) * chartHeight;
+                const y = padding.top + chartHeight - barHeight;
+                
+                let color = colors[index % colors.length];
+                
+                // Изменение цвета для разных типов
+                if (type === 'bar') {
+                    // Столбчатая диаграмма
+                    const gradient = ctx.createLinearGradient(x, y, x, y + barHeight);
+                    gradient.addColorStop(0, color);
+                    gradient.addColorStop(1, lightenColor(color, 40));
+                    ctx.fillStyle = gradient;
+                    
+                    ctx.shadowColor = 'rgba(0,0,0,0.1)';
+                    ctx.shadowBlur = 5;
+                    ctx.fillRect(x, y, barWidth, barHeight);
+                    ctx.shadowBlur = 0;
+                    
+                    // Рамка
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x, y, barWidth, barHeight);
+                    
+                    // Значение сверху
+                    ctx.fillStyle = '#333';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(item.value, x + barWidth / 2, y - 5);
+                    
+                } else if (type === 'line' || type === 'area') {
+                    // Линейная или диаграмма областей
+                    const cx = padding.left + index * gap + gap / 2;
+                    const cy = y;
+                    
+                    if (index === 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(cx, cy);
+                    } else {
+                        const prevX = padding.left + (index - 1) * gap + gap / 2;
+                        const prevY = padding.top + chartHeight - (data[index - 1].value / maxValue) * chartHeight;
+                        
+                        if (type === 'area') {
+                            ctx.lineTo(cx, cy);
+                            ctx.lineTo(cx, padding.top + chartHeight);
+                            ctx.lineTo(prevX, padding.top + chartHeight);
+                            ctx.closePath();
+                            ctx.fillStyle = color + '40';
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.moveTo(prevX, prevY);
+                            ctx.lineTo(cx, cy);
+                        } else {
+                            ctx.lineTo(cx, cy);
+                        }
+                    }
+                    
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    
+                    // Точки
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    // Значение
+                    ctx.fillStyle = '#333';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(item.value, cx, cy - 12);
+                }
+                
+                // Подписи оси X
+                ctx.fillStyle = '#666';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                const labelX = padding.left + index * gap + gap / 2;
+                ctx.fillText(item.label, labelX, padding.top + chartHeight + 20);
+            });
+        }
+
+        // Вспомогательная функция для осветления цвета
+        function lightenColor(hex, percent) {
+            const num = parseInt(hex.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = Math.min(255, (num >> 16) + amt);
+            const G = Math.min(255, ((num >> 8) & 0x00FF) + amt);
+            const B = Math.min(255, (num & 0x0000FF) + amt);
+            return `rgb(${R}, ${G}, ${B})`;
+        }
+
+        // Обновление легенды
+        function updateLegend(data) {
+            const legendContainer = document.getElementById('legend');
+            legendContainer.innerHTML = '';
+            
+            data.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'legend-item';
+                div.innerHTML = `
+                    <span class="legend-color" style="background-color:${colors[index % colors.length]}"></span>
+                    <span>${item.label}: ${item.value}</span>
+                `;
+                legendContainer.appendChild(div);
+            });
+        }
+
+        // Обработка движения мыши на canvas
+        canvas.addEventListener('mousemove', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+            
+            // Масштабирование координат
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const canvasX = mouseX * scaleX;
+            const canvasY = mouseY * scaleY;
+            
+            // Поиск ближайшего столбца
+            const padding = { top: 40, right: 40, bottom: 60, left: 60 };
+            const chartWidth = canvas.width - padding.left - padding.right;
+            const gap = chartWidth / chartData.length;
+            
+            let found = false;
+            chartData.forEach((item, index) => {
+                const x = padding.left + index * gap + gap / 2;
+                const y = padding.top + (1 - item.value / Math.max(...chartData.map(d => d.value), 10)) * 
+                          (canvas.height - padding.top - padding.bottom);
+                
+                if (Math.abs(canvasX - x) < gap / 2 && Math.abs(canvasY - y) < 50) {
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = (event.clientX + 10) + 'px';
+                    tooltip.style.top = (event.clientY - 10) + 'px';
+                    tooltip.innerHTML = `<strong>${item.label}</strong><br>Значение: ${item.value}`;
+                    canvas.style.cursor = 'pointer';
+                    found = true;
+                }
+            });
+            
+            if (!found) {
+                tooltip.style.display = 'none';
+                canvas.style.cursor = 'default';
+            }
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none';
+        });
+
+        // Обновление диаграммы
+        function updateChart() {
+            chartData = generateData();
+            drawChart(chartData, chartType);
+            updateLegend(chartData);
+        }
+
+        // Обработчики кнопок
+        document.getElementById('chartBar').addEventListener('click', () => {
+            chartType = 'bar';
+            document.querySelectorAll('.controls button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('chartBar').classList.add('active');
+            drawChart(chartData, chartType);
+        });
+        
+        document.getElementById('chartLine').addEventListener('click', () => {
+            chartType = 'line';
+            document.querySelectorAll('.controls button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('chartLine').classList.add('active');
+            drawChart(chartData, chartType);
+        });
+        
+        document.getElementById('chartArea').addEventListener('click', () => {
+            chartType = 'area';
+            document.querySelectorAll('.controls button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('chartArea').classList.add('active');
+            drawChart(chartData, chartType);
+        });
+        
+        document.getElementById('refreshDataBtn').addEventListener('click', updateChart);
+
+        // Инициализация
+        updateChart();
+
+        // Обработка ресайза
+        window.addEventListener('resize', () => {
+            drawChart(chartData, chartType);
+        });
+    </script>
+</body>
+</html>
+```
+</details>
