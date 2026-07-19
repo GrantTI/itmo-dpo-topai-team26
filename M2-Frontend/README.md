@@ -19,7 +19,7 @@
 
 ---
 
-## Материалы для подготовки к тестам
+## Материалы для подготовки
 - https://htmlbook.ru - материалы для подготовки по html и css
 - https://learn.javascript.ru - учебник по Javascript
 - https://metanit.com/web/javascript/ - курс по Javascript
