@@ -1384,3 +1384,368 @@ uvicorn server:app --reload
 ```
 </details>
 
+# Задание 8. Загрузка данных из CSV с сервера
+
+**Описание:** Загрузите данные из CSV файла через FastAPI и отобразите их в виде таблицы.
+
+**Требования:**
+
+- Используйте FastAPI для получения данных (готовый сервер из подготовительной части).
+- Загрузите данные через `fetch`.
+- Отобразите данные в виде HTML-таблицы с заголовками.
+- Добавьте поиск и фильтрацию данных.
+
+<details>
+<summary><b>Пример решения</b></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 8</title>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .controls input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .controls input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .controls select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table thead {
+            background-color: #3498db;
+            color: white;
+        }
+        table th {
+            padding: 12px 15px;
+            text-align: left;
+            cursor: pointer;
+            user-select: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        table th:hover {
+            background-color: #2980b9;
+        }
+        table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        table tbody tr:hover {
+            background-color: #f0f8ff;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+            background-color: #fff5f5;
+            border-radius: 8px;
+        }
+        .highlight {
+            background-color: #fff3cd !important;
+        }
+        .score-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .score-high {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .score-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .score-low {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #tableContainer {
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Задание 8: Загрузка CSV данных</h1>
+        
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Поиск по всем полям...">
+            <select id="filterColumn">
+                <option value="">Все столбцы</option>
+            </select>
+            <button id="refreshBtn">🔄 Обновить</button>
+            <button id="resetBtn">✖️ Сбросить</button>
+        </div>
+        
+        <div class="stats-bar">
+            <span id="recordCount">Записей: 0</span>
+            <span id="avgScore">Средний балл: -</span>
+        </div>
+        
+        <div class="table-wrapper" id="tableContainer">
+            <div class="loading">Загрузка данных...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api/data/csv';
+        let originalData = [];
+        let filteredData = [];
+        let currentSort = { column: null, direction: 'asc' };
+
+        const searchInput = document.getElementById('searchInput');
+        const filterColumn = document.getElementById('filterColumn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const tableContainer = document.getElementById('tableContainer');
+        const recordCount = document.getElementById('recordCount');
+        const avgScore = document.getElementById('avgScore');
+
+        // Загрузка данных
+        async function loadData() {
+            try {
+                tableContainer.innerHTML = '<div class="loading">Загрузка данных...</div>';
+                
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
+                originalData = result.data || [];
+                filteredData = [...originalData];
+                
+                updateFilterOptions();
+                applyFiltersAndRender();
+                
+            } catch (error) {
+                console.error('Ошибка загрузки:', error);
+                tableContainer.innerHTML = `
+                    <div class="error">
+                        ❌ Ошибка загрузки данных: ${error.message}<br>
+                        <small>Убедитесь, что сервер FastAPI запущен на порту 8000</small>
+                    </div>
+                `;
+            }
+        }
+
+        // Обновление опций фильтра
+        function updateFilterOptions() {
+            if (originalData.length === 0) return;
+            
+            const columns = Object.keys(originalData[0]);
+            filterColumn.innerHTML = '<option value="">Все столбцы</option>';
+            
+            columns.forEach(col => {
+                const option = document.createElement('option');
+                option.value = col;
+                option.textContent = col.charAt(0).toUpperCase() + col.slice(1);
+                filterColumn.appendChild(option);
+            });
+        }
+
+        // Сортировка
+        function sortData(data, column, direction) {
+            return [...data].sort((a, b) => {
+                let valA = a[column] || '';
+                let valB = b[column] || '';
+                
+                // Определение типа для корректной сортировки
+                if (!isNaN(valA) && !isNaN(valB)) {
+                    valA = parseFloat(valA);
+                    valB = parseFloat(valB);
+                } else {
+                    valA = valA.toString().toLowerCase();
+                    valB = valB.toString().toLowerCase();
+                }
+                
+                if (valA < valB) return direction === 'asc' ? -1 : 1;
+                if (valA > valB) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // Применение фильтров и сортировки
+        function applyFiltersAndRender() {
+            let data = [...originalData];
+            
+            // Поиск
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            if (searchTerm) {
+                const column = filterColumn.value;
+                data = data.filter(row => {
+                    if (column) {
+                        const value = String(row[column] || '').toLowerCase();
+                        return value.includes(searchTerm);
+                    } else {
+                        return Object.values(row).some(val => 
+                            String(val).toLowerCase().includes(searchTerm)
+                        );
+                    }
+                });
+            }
+            
+            // Сортировка
+            if (currentSort.column) {
+                data = sortData(data, currentSort.column, currentSort.direction);
+            }
+            
+            filteredData = data;
+            renderTable(data);
+            updateStats(data);
+        }
+
+        // Отображение таблицы
+        function renderTable(data) {
+            if (data.length === 0) {
+                tableContainer.innerHTML = `
+                    <div style="text-align:center;padding:40px;color:#666;">
+                        <p>📭 Нет данных для отображения</p>
+                        <small>Попробуйте изменить параметры поиска</small>
+                    </div>
+                `;
+                return;
+            }
+
+            const columns = Object.keys(data[0]);
+            
+            let html = '<table><thead><tr>';
+            columns.forEach(col => {
+                const isSorted = currentSort.column === col;
+                const direction = isSorted ? currentSort.direction : 'asc';
+                const arrow = isSorted ? (direction === 'asc' ? '↑' : '↓') : '↕';
+                html += `<th onclick="sortBy('${col}')">${col} ${arrow}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            data.forEach(row => {
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    
+                    // Форматирование для баллов
+                    if (col === 'score' && !isNaN(value)) {
+                        const score = parseFloat(value);
+                        let badgeClass = 'score-medium';
+                        if (score >= 4.5) badgeClass = 'score-high';
+                        else if (score < 3.5) badgeClass = 'score-low';
+                        html += `<td><span class="score-badge ${badgeClass}">${value}</span></td>`;
+                    } else {
+                        html += `<td>${value}</td>`;
+                    }
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            tableContainer.innerHTML = html;
+        }
+
+        // Обновление статистики
+        function updateStats(data) {
+            recordCount.textContent = `Записей: ${data.length}`;
+            
+            if (data.length > 0 && 'score' in data[0]) {
+                const scores = data.map(row => parseFloat(row.score)).filter(s => !isNaN(s));
+                if (scores.length > 0) {
+                    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+                    avgScore.textContent = `Средний балл: ${avg.toFixed(2)}`;
+                } else {
+                    avgScore.textContent = 'Средний балл: -';
+                }
+            } else {
+                avgScore.textContent = 'Средний балл: -';
+            }
+        }
+
+        // Сортировка по столбцу (глобальная функция для onclick)
+        window.sortBy = function(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+            applyFiltersAndRender();
+        };
+
+        // Обработчики событий
+        searchInput.addEventListener('input', applyFiltersAndRender);
+        filterColumn.addEventListener('change', applyFiltersAndRender);
+        
+        refreshBtn.addEventListener('click', loadData);
+        resetBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            filterColumn.value = '';
+            currentSort = { column: null, direction: 'asc' };
+            applyFiltersAndRender();
+        });
+
+        // Загрузка данных при открытии страницы
+        loadData();
+    </script>
+</body>
+</html>
+```
+</details>
