@@ -16,6 +16,7 @@
 <summary><b>Настройки окружения</b></summary>
 
 ### Структура проекта
+
 lab-javascript/
 ├── index.html
 ├── style.css
