@@ -1127,4 +1127,260 @@ uvicorn server:app --reload
 ```
 </details>
 
+# Задание 7. Загрузка данных из текстового файла
+
+**Описание:** Реализуйте загрузку и отображение данных из текстового файла.
+
+**Требования:**
+
+- Создайте форму для загрузки файла (`<input type="file">`).
+- Реализуйте чтение файла с помощью FileReader.
+- Отобразите содержимое файла на странице.
+- Добавьте подсчет строк, слов и символов.
+
+<details>
+<summary><b>Пример решения</b></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 7</title>
+    <style>
+        .upload-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .drop-zone {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .drop-zone:hover {
+            background-color: #f0f8ff;
+            border-color: #2980b9;
+        }
+        .drop-zone.dragover {
+            background-color: #e3f2fd;
+            border-color: #2ecc71;
+        }
+        .file-input {
+            display: none;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .stat-card .label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        #contentDisplay {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #ddd;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .clear-btn {
+            padding: 8px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .clear-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>Задание 7: Загрузка текстового файла</h1>
+        
+        <div class="drop-zone" id="dropZone">
+            <p>Перетащите файл сюда или кликните для выбора</p>
+            <p style="font-size: 14px; color: #999;">Поддерживаются: .txt, .log, .md</p>
+        </div>
+        
+        <input type="file" class="file-input" id="fileInput" accept=".txt,.log,.md">
+        
+        <div class="stats" id="statsContainer" style="display: none;">
+            <div class="stat-card">
+                <div class="number" id="lineCount">0</div>
+                <div class="label">Строк</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="wordCount">0</div>
+                <div class="label">Слов</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="charCount">0</div>
+                <div class="label">Символов</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="fileSize">0</div>
+                <div class="label">Размер (КБ)</div>
+            </div>
+        </div>
+        
+        <div id="contentDisplay"></div>
+        
+        <button class="clear-btn" id="clearBtn" style="display: none;">Очистить</button>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const contentDisplay = document.getElementById('contentDisplay');
+        const statsContainer = document.getElementById('statsContainer');
+        const clearBtn = document.getElementById('clearBtn');
+        
+        const lineCount = document.getElementById('lineCount');
+        const wordCount = document.getElementById('wordCount');
+        const charCount = document.getElementById('charCount');
+        const fileSize = document.getElementById('fileSize');
+
+        function readFileContent(file) {
+            const reader = new FileReader();
+            
+            reader.onload = (event) => {
+                const content = event.target.result;
+                displayContent(content, file.size);
+            };
+            
+            reader.onerror = (event) => {
+                alert('Ошибка чтения файла: ' + event.target.error);
+            };
+            
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function displayContent(content, size) {
+            // Отображение содержимого
+            contentDisplay.textContent = content;
+            contentDisplay.style.display = 'block';
+            
+            // Статистика
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            const words = content.match(/\S+/g) || [];
+            const chars = content.replace(/\s/g, '');
+            
+            lineCount.textContent = lines.length;
+            wordCount.textContent = words.length;
+            charCount.textContent = chars.length;
+            fileSize.textContent = (size / 1024).toFixed(2);
+            
+            statsContainer.style.display = 'grid';
+            clearBtn.style.display = 'inline-block';
+            
+            // Анимация появления
+            contentDisplay.style.opacity = '0';
+            setTimeout(() => {
+                contentDisplay.style.transition = 'opacity 0.5s';
+                contentDisplay.style.opacity = '1';
+            }, 10);
+        }
+
+        function clearContent() {
+            contentDisplay.style.display = 'none';
+            contentDisplay.textContent = '';
+            statsContainer.style.display = 'none';
+            clearBtn.style.display = 'none';
+            fileInput.value = '';
+        }
+
+        // Клик по drop-zone для выбора файла
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Обработка выбора файла
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                readFileContent(file);
+            }
+        });
+
+        // Drag and Drop
+        dropZone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('dragover');
+            
+            const file = event.dataTransfer.files[0];
+            if (file) {
+                readFileContent(file);
+            }
+        });
+
+        // Очистка
+        clearBtn.addEventListener('click', clearContent);
+
+        // Загрузка примера через FastAPI (задание 8)
+        async function loadExampleData() {
+            try {
+                const response = await fetch('http://localhost:8000/api/data/txt');
+                const data = await response.json();
+                if (data.content) {
+                    // Создаем Blob для отображения
+                    const blob = new Blob([data.content], { type: 'text/plain' });
+                    const file = new File([blob], 'sample.txt', { type: 'text/plain' });
+                    readFileContent(file);
+                }
+            } catch (error) {
+                console.log('Сервер не запущен, используйте локальные файлы');
+            }
+        }
+    </script>
+</body>
+</html>
+```
+</details>
 
