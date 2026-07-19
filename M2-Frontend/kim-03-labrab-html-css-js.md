@@ -145,3 +145,43 @@
     <img src="https://via.placeholder.com/150" alt="Кликни на меня" width="150" height="150">
 </a>
 ```
+
+# Задание 5. Создание формы с текстовыми полями
+
+**Описание:** Создайте форму с различными типами текстовых полей.
+
+**Требования:**
+
+- Поле для ввода текста (`<input type="text">`).
+- Поле для ввода email (`<input type="email">`).
+- Поле для ввода пароля (`<input type="password">`).
+- Многострочное текстовое поле (`<textarea>`).
+- Все поля должны иметь подписи (`<label>`).
+- Добавьте обязательные поля (атрибут `required`).
+
+**Пример:**
+
+```html
+<h2>Регистрационная форма</h2>
+<form action="#" method="post">
+    <div>
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" placeholder="Введите ваше имя" required>
+    </div>
+    
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="example@mail.ru" required>
+    </div>
+    
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" placeholder="Минимум 6 символов" required>
+    </div>
+    
+    <div>
+        <label for="comment">Комментарий:</label>
+        <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Введите ваш комментарий..."></textarea>
+    </div>
+</form>
+```
