@@ -25,18 +25,22 @@ lab-javascript/
 │   └── sample.csv
 ├── server.py
 └── README.md
+
 Настройка FastAPI сервера (для заданий 8-10)
 server.py:
 
-python
+```python
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import os
+```
 
 app = FastAPI()
 
 # Разрешаем CORS для разработки
+
+```
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -73,16 +77,9 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
 data/sample.txt:
+```
 
-text
-Изучение JavaScript
-Работа с DOM
-Обработка событий
-Визуализация данных
-Загрузка файлов
-Асинхронные запросы
-data/sample.csv:
-
+```
 csv
 id,name,age,city,score
 1,Анна,25,Москва,4.8
@@ -93,8 +90,12 @@ id,name,age,city,score
 6,Евгений,27,Москва,4.1
 7,Жанна,24,Санкт-Петербург,4.6
 8,Иван,31,Казань,3.9
+```
+
 Запуск сервера:
 
+```
 bash
 pip install fastapi uvicorn
 uvicorn server:app --reload
+```
