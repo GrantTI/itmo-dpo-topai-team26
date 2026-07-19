@@ -216,3 +216,37 @@
     <label><input type="radio" name="level" value="advanced"> Продвинутый</label>
 </div>
 ```
+
+# Задание 7. Работа с выпадающими списками
+
+**Описание:** Создайте выпадающий список (`<select>`) и список с множественным выбором.
+
+**Требования:**
+
+- Обычный выпадающий список с выбором одного варианта.
+- Список с множественным выбором (атрибут `multiple`).
+- Один из вариантов должен быть выбран по умолчанию (атрибут `selected`).
+
+**Пример:**
+
+```html
+<h2>Выберите город</h2>
+<div>
+    <label for="city">Город:</label>
+    <select id="city" name="city">
+        <option value="msk">Москва</option>
+        <option value="spb" selected>Санкт-Петербург</option>
+        <option value="kazan">Казань</option>
+        <option value="novosib">Новосибирск</option>
+    </select>
+</div>
+
+<div>
+    <label for="hobbies">Интересы (выберите несколько):</label>
+    <select id="hobbies" name="hobbies" multiple size="4">
+        <option value="music">Музыка</option>
+        <option value="sport">Спорт</option>
+        <option value="reading">Чтение</option>
+        <option value="travel">Путешествия</option>
+    </select>
+</div>
