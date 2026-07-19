@@ -2125,3 +2125,667 @@ uvicorn server:app --reload
 </html>
 ```
 </details>
+
+
+# Задание 10. Комплексное приложение: загрузка, фильтрация и визуализация
+
+**Описание:** Создайте полноценное приложение, объединяющее все предыдущие навыки.
+
+**Требования:**
+
+- Загрузка данных из CSV через FastAPI.
+- Отображение данных в виде таблицы.
+- Поиск и фильтрация данных.
+- Визуализация данных в виде графика (выбор типа графика).
+- Экспорт отфильтрованных данных в CSV (скачивание).
+
+<details>
+<summary><b>Пример решения (ключевые компоненты)</b></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 10: Комплексное приложение</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        header h1 { margin-bottom: 5px; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .controls input, .controls select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 150px;
+        }
+        .controls input:focus, .controls select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .controls button {
+            padding: 8px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        .controls button:hover { background-color: #2980b9; }
+        .controls button.secondary {
+            background-color: #95a5a6;
+        }
+        .controls button.secondary:hover { background-color: #7f8c8d; }
+        .controls button.danger {
+            background-color: #e74c3c;
+        }
+        .controls button.danger:hover { background-color: #c0392b; }
+        
+        .table-wrapper {
+            max-height: 400px;
+            overflow: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table th {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 12px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            cursor: pointer;
+        }
+        table th:hover { background-color: #2980b9; }
+        table td {
+            padding: 6px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        table tbody tr:hover { background-color: #f0f8ff; }
+        table tbody tr:nth-child(even) { background-color: #fafafa; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .stat-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-item .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .stat-item .label {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .chart-container {
+            height: 300px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+        }
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        .download-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>📊 Комплексное приложение</h1>
+            <p>Загрузка, фильтрация и визуализация данных</p>
+        </header>
+        
+        <div id="alertContainer"></div>
+        
+        <div class="grid">
+            <!-- Таблица -->
+            <div class="card">
+                <h2>📋 Данные</h2>
+                <div class="controls">
+                    <input type="text" id="searchInput" placeholder="Поиск...">
+                    <select id="filterColumn">
+                        <option value="">Все столбцы</option>
+                    </select>
+                    <button id="refreshBtn">🔄</button>
+                </div>
+                <div class="stats" id="statsContainer"></div>
+                <div class="table-wrapper" id="tableContainer">
+                    <div style="text-align:center;padding:40px;color:#999;">
+                        Загрузка данных...
+                    </div>
+                </div>
+                <button class="download-btn" id="downloadBtn">⬇️ Скачать CSV</button>
+            </div>
+            
+            <!-- График -->
+            <div class="card">
+                <h2>📈 Визуализация</h2>
+                <div class="controls">
+                    <select id="chartTypeSelect">
+                        <option value="bar">Столбчатая</option>
+                        <option value="line">Линейная</option>
+                        <option value="pie">Круговая</option>
+                        <option value="area">Области</option>
+                    </select>
+                    <select id="chartColumnSelect">
+                        <option value="score">Баллы</option>
+                        <option value="age">Возраст</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api/data/csv';
+        let allData = [];
+        let filteredData = [];
+        let currentSort = { column: null, direction: 'asc' };
+        
+        // DOM элементы
+        const searchInput = document.getElementById('searchInput');
+        const filterColumn = document.getElementById('filterColumn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const tableContainer = document.getElementById('tableContainer');
+        const statsContainer = document.getElementById('statsContainer');
+        const alertContainer = document.getElementById('alertContainer');
+        const canvas = document.getElementById('chartCanvas');
+        const chartTypeSelect = document.getElementById('chartTypeSelect');
+        const chartColumnSelect = document.getElementById('chartColumnSelect');
+        const ctx = canvas.getContext('2d');
+
+        // Показ уведомления
+        function showAlert(message, type = 'info') {
+            alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Загрузка данных
+        async function loadData() {
+            try {
+                showAlert('Загрузка данных...', 'info');
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const result = await response.json();
+                if (result.error) throw new Error(result.error);
+                
+                allData = result.data || [];
+                filteredData = [...allData];
+                
+                updateFilterOptions();
+                applyFilters();
+                showAlert(`Загружено ${allData.length} записей`, 'info');
+                
+            } catch (error) {
+                showAlert(`Ошибка: ${error.message}. Проверьте сервер.`, 'danger');
+                console.error(error);
+            }
+        }
+
+        // Обновление опций фильтра
+        function updateFilterOptions() {
+            if (allData.length === 0) return;
+            const columns = Object.keys(allData[0]);
+            filterColumn.innerHTML = '<option value="">Все столбцы</option>';
+            columns.forEach(col => {
+                const opt = document.createElement('option');
+                opt.value = col;
+                opt.textContent = col.charAt(0).toUpperCase() + col.slice(1);
+                filterColumn.appendChild(opt);
+            });
+        }
+
+        // Применение фильтров
+        function applyFilters() {
+            let data = [...allData];
+            
+            const search = searchInput.value.toLowerCase().trim();
+            if (search) {
+                const col = filterColumn.value;
+                data = data.filter(row => {
+                    if (col) {
+                        return String(row[col] || '').toLowerCase().includes(search);
+                    }
+                    return Object.values(row).some(v => 
+                        String(v).toLowerCase().includes(search)
+                    );
+                });
+            }
+            
+            if (currentSort.column) {
+                data.sort((a, b) => {
+                    let va = a[currentSort.column] || '';
+                    let vb = b[currentSort.column] || '';
+                    if (!isNaN(va) && !isNaN(vb)) {
+                        va = parseFloat(va);
+                        vb = parseFloat(vb);
+                    } else {
+                        va = va.toString().toLowerCase();
+                        vb = vb.toString().toLowerCase();
+                    }
+                    return currentSort.direction === 'asc' 
+                        ? va > vb ? 1 : va < vb ? -1 : 0
+                        : va < vb ? 1 : va > vb ? -1 : 0;
+                });
+            }
+            
+            filteredData = data;
+            renderTable(data);
+            updateStats(data);
+            drawChart(data);
+        }
+
+        // Рендер таблицы
+        function renderTable(data) {
+            if (data.length === 0) {
+                tableContainer.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Нет данных</div>';
+                return;
+            }
+            
+            const cols = Object.keys(data[0]);
+            let html = '<table><thead><tr>';
+            cols.forEach(col => {
+                const isSorted = currentSort.column === col;
+                const arrow = isSorted ? (currentSort.direction === 'asc' ? '↑' : '↓') : '↕';
+                html += `<th onclick="sortBy('${col}')">${col} ${arrow}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            data.forEach(row => {
+                html += '<tr>';
+                cols.forEach(col => {
+                    let val = row[col] || '';
+                    if (col === 'score' && !isNaN(val)) {
+                        const score = parseFloat(val);
+                        let cls = 'score-medium';
+                        if (score >= 4.5) cls = 'score-high';
+                        else if (score < 3.5) cls = 'score-low';
+                        html += `<td><span class="score-badge ${cls}">${val}</span></td>`;
+                    } else {
+                        html += `<td>${val}</td>`;
+                    }
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            tableContainer.innerHTML = html;
+        }
+
+        // Обновление статистики
+        function updateStats(data) {
+            if (data.length === 0) {
+                statsContainer.innerHTML = `<div class="stat-item"><div class="value">0</div><div class="label">Записей</div></div>`;
+                return;
+            }
+            
+            const total = data.length;
+            const avgScore = data.reduce((s, r) => s + parseFloat(r.score || 0), 0) / total;
+            const avgAge = data.reduce((s, r) => s + parseFloat(r.age || 0), 0) / total;
+            
+            statsContainer.innerHTML = `
+                <div class="stat-item"><div class="value">${total}</div><div class="label">Записей</div></div>
+                <div class="stat-item"><div class="value">${avgScore.toFixed(2)}</div><div class="label">Средний балл</div></div>
+                <div class="stat-item"><div class="value">${avgAge.toFixed(1)}</div><div class="label">Средний возраст</div></div>
+            `;
+        }
+
+        // Сортировка
+        window.sortBy = function(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+            applyFilters();
+        };
+
+        // Рисование графика
+        function drawChart(data) {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = canvas.parentElement.clientWidth || 800;
+            canvas.height = 300;
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = { top: 30, right: 30, bottom: 40, left: 50 };
+            const chartW = width - padding.left - padding.right;
+            const chartH = height - padding.top - padding.bottom;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            if (data.length === 0) {
+                ctx.fillStyle = '#999';
+                ctx.font = '18px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Нет данных', width / 2, height / 2);
+                return;
+            }
+            
+            const column = chartColumnSelect.value;
+            const values = data.map(r => parseFloat(r[column]) || 0);
+            const labels = data.map(r => r.name || '');
+            const maxVal = Math.max(...values, 10);
+            const minVal = Math.min(...values, 0);
+            const range = maxVal - minVal || 1;
+            
+            const type = chartTypeSelect.value;
+            
+            if (type === 'pie') {
+                // Круговая диаграмма
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const radius = Math.min(width, height) / 2 - 30;
+                let startAngle = -Math.PI / 2;
+                
+                const total = values.reduce((s, v) => s + v, 0);
+                if (total === 0) {
+                    ctx.fillStyle = '#999';
+                    ctx.font = '18px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Нет данных для круговой диаграммы', width / 2, height / 2);
+                    return;
+                }
+                
+                const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#2c3e50'];
+                
+                values.forEach((val, i) => {
+                    const sliceAngle = (val / total) * Math.PI * 2;
+                    const color = colors[i % colors.length];
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+                    ctx.closePath();
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    // Подпись
+                    const midAngle = startAngle + sliceAngle / 2;
+                    const labelRadius = radius * 0.65;
+                    const lx = centerX + Math.cos(midAngle) * labelRadius;
+                    const ly = centerY + Math.sin(midAngle) * labelRadius;
+                    ctx.fillStyle = 'white';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    if (val / total > 0.05) {
+                        ctx.fillText(`${Math.round(val / total * 100)}%`, lx, ly);
+                    }
+                    
+                    startAngle += sliceAngle;
+                });
+                
+                // Легенда
+                let legendY = 10;
+                const legendX = width - 120;
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                labels.forEach((label, i) => {
+                    if (i < 10) {
+                        const color = colors[i % colors.length];
+                        ctx.fillStyle = color;
+                        ctx.fillRect(legendX, legendY + i * 20, 15, 15);
+                        ctx.fillStyle = '#333';
+                        ctx.font = '11px Arial';
+                        ctx.fillText(label.substring(0, 12), legendX + 20, legendY + i * 20);
+                    }
+                });
+                
+            } else {
+                // Столбчатая, линейная, области
+                const gap = chartW / Math.max(data.length, 1);
+                const barWidth = Math.min(gap * 0.7, 40);
+                
+                // Сетка
+                ctx.strokeStyle = '#eee';
+                ctx.lineWidth = 1;
+                for (let i = 0; i <= 5; i++) {
+                    const y = padding.top + chartH - (i / 5) * chartH;
+                    ctx.beginPath();
+                    ctx.moveTo(padding.left, y);
+                    ctx.lineTo(width - padding.right, y);
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = '#999';
+                    ctx.font = '11px Arial';
+                    ctx.textAlign = 'right';
+                    ctx.fillText((minVal + (i / 5) * range).toFixed(1), padding.left - 5, y + 4);
+                }
+                
+                // Данные
+                const isArea = type === 'area';
+                const isLine = type === 'line' || isArea;
+                
+                values.forEach((val, i) => {
+                    const x = padding.left + i * gap + gap / 2;
+                    const normVal = (val - minVal) / range;
+                    const barH = normVal * chartH;
+                    const y = padding.top + chartH - barH;
+                    
+                    const color = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#2c3e50'][i % 8];
+                    
+                    if (isLine) {
+                        if (i === 0) {
+                            ctx.beginPath();
+                            ctx.moveTo(x, y);
+                        } else {
+                            const prevX = padding.left + (i - 1) * gap + gap / 2;
+                            const prevVal = (values[i - 1] - minVal) / range;
+                            const prevY = padding.top + chartH - prevVal * chartH;
+                            
+                            ctx.lineTo(x, y);
+                            
+                            if (isArea && i === values.length - 1) {
+                                ctx.lineTo(x, padding.top + chartH);
+                                ctx.lineTo(prevX, padding.top + chartH);
+                                ctx.closePath();
+                                ctx.fillStyle = color + '30';
+                                ctx.fill();
+                                ctx.beginPath();
+                                ctx.moveTo(prevX, prevY);
+                                ctx.lineTo(x, y);
+                            }
+                        }
+                    } else {
+                        // Столбцы
+                        const grad = ctx.createLinearGradient(x, y, x, y + barH);
+                        grad.addColorStop(0, color);
+                        grad.addColorStop(1, color + '80');
+                        ctx.fillStyle = grad;
+                        ctx.shadowColor = 'rgba(0,0,0,0.1)';
+                        ctx.shadowBlur = 5;
+                        ctx.fillRect(x - barWidth / 2, y, barWidth, barH);
+                        ctx.shadowBlur = 0;
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(x - barWidth / 2, y, barWidth, barH);
+                    }
+                    
+                    // Точки для линейной
+                    if (isLine) {
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 3;
+                        ctx.stroke();
+                        
+                        ctx.beginPath();
+                        ctx.arc(x, y, 5, 0, Math.PI * 2);
+                        ctx.fillStyle = color;
+                        ctx.fill();
+                        ctx.strokeStyle = 'white';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                    
+                    // Подпись оси X
+                    ctx.fillStyle = '#666';
+                    ctx.font = '11px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    const label = labels[i] || '';
+                    ctx.fillText(label.substring(0, 10), x, padding.top + chartH + 10);
+                    
+                    // Значение
+                    ctx.fillStyle = '#333';
+                    ctx.font = '10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText(val.toFixed(1), x, y - 5);
+                });
+            }
+        }
+
+        // Экспорт CSV
+        function downloadCSV() {
+            if (filteredData.length === 0) {
+                showAlert('Нет данных для экспорта', 'warning');
+                return;
+            }
+            
+            const cols = Object.keys(filteredData[0]);
+            let csv = cols.join(',') + '\n';
+            filteredData.forEach(row => {
+                csv += cols.map(col => `"${row[col] || ''}"`).join(',') + '\n';
+            });
+            
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `data_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            showAlert('CSV скачан', 'info');
+        }
+
+        // Обработчики
+        searchInput.addEventListener('input', applyFilters);
+        filterColumn.addEventListener('change', applyFilters);
+        refreshBtn.addEventListener('click', loadData);
+        downloadBtn.addEventListener('click', downloadCSV);
+        chartTypeSelect.addEventListener('change', () => drawChart(filteredData));
+        chartColumnSelect.addEventListener('change', () => drawChart(filteredData));
+
+        // Обработка ресайза для canvas
+        window.addEventListener('resize', () => {
+            if (filteredData.length > 0) drawChart(filteredData);
+        });
+
+        // Инициализация
+        loadData();
+    </script>
+</body>
+</html>
+```
+</details>
