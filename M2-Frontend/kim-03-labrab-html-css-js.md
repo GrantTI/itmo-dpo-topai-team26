@@ -283,3 +283,90 @@
         <input type="reset" value="Очистить">
     </div>
 </form>
+```
+# Задание 9. Базовая стилизация элементов CSS
+
+**Описание:** Примените CSS-стили к созданным элементам.
+
+**Требования:**
+
+- Задайте цвет фона страницы, цвет и размер шрифта для всего документа.
+- Стилизуйте заголовки (разные цвета для разных уровней).
+- Добавьте отступы и рамки для полей формы.
+- Измените цвет ссылок при наведении (`:hover`).
+- Добавьте стили для списков (измените маркеры, цвет текста).
+
+**Пример CSS:**
+
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 10px;
+}
+
+h2 {
+    color: #2980b9;
+    margin-top: 30px;
+}
+
+h3 {
+    color: #3498db;
+}
+
+h4 {
+    color: #7f8c8d;
+}
+
+/* Стили для ссылок */
+a {
+    color: #2980b9;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #e74c3c;
+    text-decoration: underline;
+}
+
+/* Стили для полей формы */
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Стили для списков */
+ul {
+    list-style-type: square;
+    color: #2c3e50;
+}
+
+ol {
+    color: #2c3e50;
+}
+
+ul ul {
+    list-style-type: circle;
+    margin-left: 20px;
+}
+```
