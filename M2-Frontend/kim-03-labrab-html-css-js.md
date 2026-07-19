@@ -185,3 +185,34 @@
     </div>
 </form>
 ```
+
+# Задание 6. Работа с чекбоксами и радиокнопками
+
+**Описание:** Добавьте в форму группы чекбоксов и радиокнопок.
+
+**Требования:**
+
+- Группа чекбоксов (`<input type="checkbox">`) с одинаковым атрибутом `name` для выбора нескольких вариантов.
+- Группа радиокнопок (`<input type="radio">`) с одинаковым атрибутом `name` для выбора одного варианта.
+- Одна из радиокнопок должна быть выбрана по умолчанию (атрибут `checked`).
+- Все элементы должны иметь подписи.
+
+**Пример:**
+
+```html
+<h2>Выберите интересующие технологии</h2>
+<div>
+    <p>Какие технологии вы хотите изучить?</p>
+    <label><input type="checkbox" name="tech" value="html"> HTML</label>
+    <label><input type="checkbox" name="tech" value="css"> CSS</label>
+    <label><input type="checkbox" name="tech" value="js"> JavaScript</label>
+    <label><input type="checkbox" name="tech" value="python"> Python</label>
+</div>
+
+<div>
+    <p>Ваш уровень владения:</p>
+    <label><input type="radio" name="level" value="beginner" checked> Начинающий</label>
+    <label><input type="radio" name="level" value="middle"> Средний</label>
+    <label><input type="radio" name="level" value="advanced"> Продвинутый</label>
+</div>
+```
