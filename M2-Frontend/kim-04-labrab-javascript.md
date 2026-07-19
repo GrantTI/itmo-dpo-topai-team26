@@ -173,3 +173,126 @@ uvicorn server:app --reload
 </body>
 </html>
 ```
+
+# Задание 2. Обработка групп элементов по классам
+
+**Описание:** Создайте несколько элементов с одинаковым классом и выполните с ними групповые операции.
+
+**Требования:**
+
+- Создайте 5 карточек с классом `card`.
+- При клике на любую карточку она должна менять цвет.
+- Добавьте кнопку "Сбросить", которая возвращает все карточки в исходное состояние.
+- Реализуйте подсчет количества кликов по каждой карточке.
+
+**Пример решения:**
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 2</title>
+    <style>
+        .card {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin: 10px;
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            line-height: 120px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        .card.active {
+            background-color: #e74c3c;
+            transform: scale(1.1);
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .stats {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .stats span {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Задание 2: Групповые операции</h1>
+    
+    <div id="cardContainer"></div>
+    <button id="resetBtn">Сбросить все</button>
+    
+    <div class="stats">
+        <h3>Статистика кликов:</h3>
+        <div id="statsContainer"></div>
+    </div>
+
+    <script>
+        const cardContainer = document.getElementById('cardContainer');
+        const statsContainer = document.getElementById('statsContainer');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // Создание карточек
+        const colors = ['#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#e67e22'];
+        const names = ['Карточка 1', 'Карточка 2', 'Карточка 3', 'Карточка 4', 'Карточка 5'];
+        let clickCounts = new Array(5).fill(0);
+
+        function createCards() {
+            names.forEach((name, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = name;
+                card.style.backgroundColor = colors[index];
+                card.dataset.index = index;
+                cardContainer.appendChild(card);
+            });
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            statsContainer.innerHTML = '';
+            clickCounts.forEach((count, index) => {
+                const span = document.createElement('span');
+                span.textContent = `${names[index]}: ${count}`;
+                statsContainer.appendChild(span);
+            });
+        }
+
+        // Обработка кликов по карточкам (делегирование)
+        cardContainer.addEventListener('click', (event) => {
+            const card = event.target.closest('.card');
+            if (!card) return;
+
+            const index = parseInt(card.dataset.index);
+            card.classList.toggle('active');
+            clickCounts[index]++;
+            updateStats();
+        });
+
+        // Сброс
+        resetBtn.addEventListener('click', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.classList.remove('active'));
+            clickCounts.fill(0);
+            updateStats();
+        });
+
+        // Инициализация
+        createCards();
+        updateStats();
+    </script>
+</body>
+</html>
+```
