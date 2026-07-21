@@ -17,7 +17,7 @@
 npm create vue@latest viz-workshop
 # Выбираем: Vue 3, TypeScript - No, JSX - No, Router - Yes (пригодится)
 
-```cd viz-workshop
+cd viz-workshop
 npm install
 ```
 
