@@ -115,3 +115,20 @@ npm run build     # Сборка для продакшна в папку /dist
 - **MAE (Mean Absolute Error)** - средняя абсолютная ошибка
 - **RMSE (Root Mean Square Error)** - среднеквадратичная ошибка
 - **MAPE (Mean Absolute Percentage Error)** - ошибка в процентах
+
+## Часть 2. Подготовка данных (20 мин)
+
+### 2.1. Генерация синтетических данных (раздаточный материал)
+
+#### Файл `data/sales_forecast.csv`
+
+```csv
+date,actual,sales_forecast,ml_forecast,weather,holiday
+2024-01-01,120,115,118,25,0
+2024-01-02,95,110,105,22,0
+2024-01-03,145,130,140,28,1
+...
+2024-12-31,180,170,185,15,1
+```
+
+#### Файл `data/housing.json`
