@@ -437,3 +437,46 @@ onMounted(async () => {
 </script>
 ```
 
+## ЗАДАНИЕ 3: Кластеризация клиентов (45 мин)
+
+### Цель
+
+Сегментировать клиентов по 2 признакам и показать кластеры на графике.
+
+### Данные
+
+`data/customers.csv` (income, spending_score)
+
+### Задачи
+
+- Реализовать K-Means кластеризацию (3 кластера)
+- Визуализировать точки с цветом кластера
+- Отобразить центроиды специальным маркером
+- Добавить интерактивность: hover показывает информацию о клиенте
+
+### Ключевой код для ECharts (продвинутый вариант)
+
+```javascript
+// В компоненте ECharts
+const option = {
+  tooltip: {
+    trigger: 'item',
+    formatter: (params) => {
+      const data = params.data
+      return `Доход: ${data.value[0]}<br>Траты: ${data.value[1]}<br>Кластер: ${data.cluster}`
+    }
+  },
+  xAxis: { name: 'Доход' },
+  yAxis: { name: 'Траты' },
+  series: [{
+    type: 'scatter',
+    data: clusteredData.map(d => ({
+      value: [d.income, d.spending],
+      cluster: d.cluster,
+      itemStyle: { color: colors[d.cluster] }
+    })),
+    symbolSize: (data) => data.cluster === -1 ? 20 : 10, // центроиды больше
+    symbol: (data) => data.cluster === -1 ? 'diamond' : 'circle'
+  }]
+}
+```
