@@ -174,3 +174,35 @@ export function useDataLoader() {
   return { data, loading, error, loadCSV, loadJSON }
 }
 ```
+
+## Часть 3. ML Модели (30 мин)
+
+### 3.1. Линейная регрессия (легкая) — TensorFlow.js
+
+```javascript
+// ml/linearRegression.js
+import * as tf from '@tensorflow/tfjs'
+
+export async function trainLinearRegression(features, labels) {
+  // features: [[x1, x2, ...], ...], labels: [y1, y2, ...]
+  
+  const xs = tf.tensor2d(features)
+  const ys = tf.tensor1d(labels)
+  
+  const model = tf.sequential()
+  model.add(tf.layers.dense({ units: 1, inputShape: [features[0].length] }))
+  
+  model.compile({ optimizer: 'sgd', loss: 'meanSquaredError' })
+  
+  await model.fit(xs, ys, { epochs: 100, callbacks: { onEpochEnd: console.log } })
+  
+  return model
+}
+
+// Предсказание
+export function predict(model, newFeatures) {
+  const input = tf.tensor2d([newFeatures])
+  const output = model.predict(input)
+  return output.dataSync()[0]
+}
+```
