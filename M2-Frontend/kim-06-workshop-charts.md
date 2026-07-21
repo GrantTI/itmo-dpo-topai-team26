@@ -286,7 +286,47 @@ export function trainSVM(trainingData, labels) {
   svm.train(trainingData, labels)
   return svm
 }
+```
 
+## Часть 4. Задания (3 часа)
+
+### Задание 1: Разогрев — "Мой первый график" (20 мин)
+
+#### Команда Chart.js
+
+```vue
+<template>
+  <div class="chart-container">
+    <h3>Продажи по месяцам</h3>
+    <Bar :data="salesData" :options="options" />
+  </div>
+</template>
+
+<script setup>
+import { Bar } from 'vue-chartjs'
+import { ref, onMounted } from 'vue'
+import { useDataLoader } from '@/composables/useDataLoader'
+
+const { data, loadCSV } = useDataLoader()
+
+const salesData = ref({
+  labels: [],
+  datasets: [
+    { label: 'Факт', data: [], backgroundColor: '#42A5F5' },
+    { label: 'Прогноз', data: [], backgroundColor: '#FFA726' }
+  ]
+})
+
+onMounted(async () => {
+  await loadCSV('/data/sales_forecast.csv')
+  
+  const months = data.value.map(d => d.date)
+  salesData.value.labels = months.slice(0, 12)
+  salesData.value.datasets[0].data = data.value.map(d => d.actual).slice(0, 12)
+  salesData.value.datasets[1].data = data.value.map(d => d.sales_forecast).slice(0, 12)
+})
+</script>
+```
 export function predictSVM(svm, features) {
   return svm.predict(features)
 }
