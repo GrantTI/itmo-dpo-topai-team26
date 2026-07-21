@@ -132,3 +132,45 @@ date,actual,sales_forecast,ml_forecast,weather,holiday
 ```
 
 #### Файл `attachments/housing.json`
+
+## 2.2. Загрузка данных в Vue
+
+```javascript
+// composables/useDataLoader.js
+import { ref } from 'vue'
+import Papa from 'papaparse' // npm install papaparse
+
+export function useDataLoader() {
+  const data = ref([])
+  const loading = ref(false)
+  const error = ref(null)
+
+  const loadCSV = async (filePath) => {
+    loading.value = true
+    try {
+      const response = await fetch(filePath)
+      const csvText = await response.text()
+      const result = Papa.parse(csvText, { header: true, dynamicTyping: true })
+      data.value = result.data
+    } catch (err) {
+      error.value = err.message
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const loadJSON = async (filePath) => {
+    loading.value = true
+    try {
+      const response = await fetch(filePath)
+      data.value = await response.json()
+    } catch (err) {
+      error.value = err.message
+    } finally {
+      loading.value = false
+    }
+  }
+
+  return { data, loading, error, loadCSV, loadJSON }
+}
+```
