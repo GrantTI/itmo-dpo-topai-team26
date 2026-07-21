@@ -66,6 +66,7 @@ const chartData = {
 bash
 npm install echarts
 ```
+
 ```
 vue
 <template>
@@ -88,7 +89,7 @@ onMounted(() => {
 })
 </script>
 ```
-## 1.3. Деплой и запуск
+### 1.3. Деплой и запуск
 
 ```bash
 npm run dev       # Локальный сервер на localhost:5173
