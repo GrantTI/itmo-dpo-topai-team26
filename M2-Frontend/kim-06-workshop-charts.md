@@ -112,6 +112,6 @@ npm run build     # Сборка для продакшна в папку /dist
 
 #### Метрики качества прогнозов
 
-##### 1. MAE (Mean Absolute Error) - средняя абсолютная ошибка
-
-**Формула:**
+- **MAE (Mean Absolute Error)** - средняя абсолютная ошибка
+- **RMSE (Root Mean Square Error)** - среднеквадратичная ошибка
+- **MAPE (Mean Absolute Percentage Error)** - ошибка в процентах
