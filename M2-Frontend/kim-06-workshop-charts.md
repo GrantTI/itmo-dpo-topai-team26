@@ -259,3 +259,35 @@ export class KMeans {
   }
 }
 ```
+
+## 3.3. SVM (средняя) — используем библиотеку libsvm-js
+
+Установка:
+
+```bash
+npm install libsvm-js
+```
+
+Код модели:
+
+```
+javascript
+// ml/svm.js
+import SVM from 'libsvm-js'
+
+export function trainSVM(trainingData, labels) {
+  const svm = new SVM({
+    type: SVM.SVM_TYPES.C_SVC,
+    kernel: SVM.KERNEL_TYPES.RBF,
+    gamma: 0.5,
+    C: 1
+  })
+  
+  svm.train(trainingData, labels)
+  return svm
+}
+
+export function predictSVM(svm, features) {
+  return svm.predict(features)
+}
+```
