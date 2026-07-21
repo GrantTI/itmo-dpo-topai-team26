@@ -131,4 +131,4 @@ date,actual,sales_forecast,ml_forecast,weather,holiday
 2024-12-31,180,170,185,15,1
 ```
 
-#### Файл `attachments/housing.json`
+#### Файл (`attachments/housing.json`)[attachments/housing.json]
