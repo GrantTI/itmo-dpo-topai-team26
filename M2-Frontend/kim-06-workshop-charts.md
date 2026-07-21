@@ -445,7 +445,7 @@ onMounted(async () => {
 
 ### Данные
 
-`data/customers.csv` (income, spending_score)
+`attachments/customers.csv` 
 
 ### Задачи
 
