@@ -480,3 +480,63 @@ const option = {
   }]
 }
 ```
+
+## ЗАДАНИЕ 4: Сравнение 3 моделей (45 мин)
+
+### Цель
+
+Визуализировать предсказания трех моделей на одном графике.
+
+### Модели
+
+- Линейная регрессия
+- SVM (с библиотекой)
+- Простое скользящее среднее (baseline)
+
+### Визуализация
+
+Линейный график с 4 линиями (Факт, LR, SVM, MA)
+
+```vue
+<template>
+  <div class="comparison-chart">
+    <Line :data="comparisonData" :options="comparisonOptions" />
+    <div class="legend-extra">
+      <span v-for="model in models" :key="model.name">
+        <span :style="{ color: model.color }">●</span> {{ model.name }}: {{ model.mae.toFixed(2) }}
+      </span>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { Line } from 'vue-chartjs'
+import { ref, onMounted } from 'vue'
+
+const comparisonData = ref({
+  labels: [],
+  datasets: [
+    { label: 'Факт', data: [], borderColor: 'black', borderWidth: 3 },
+    { label: 'Linear Regression', data: [], borderColor: 'blue', borderDash: [] },
+    { label: 'SVM', data: [], borderColor: 'green', borderDash: [5, 5] },
+    { label: 'Moving Average', data: [], borderColor: 'red', borderDash: [2, 5] }
+  ]
+})
+
+// Функция скользящего среднего
+function movingAverage(data, windowSize = 3) {
+  return data.map((_, idx) => {
+    const start = Math.max(0, idx - windowSize + 1)
+    const slice = data.slice(start, idx + 1)
+    return slice.reduce((a, b) => a + b, 0) / slice.length
+  })
+}
+
+onMounted(async () => {
+  // Загрузка данных и обучение моделей...
+  // Заполнение comparisonData.value.datasets
+})
+</script>
+```
+
+
