@@ -540,3 +540,101 @@ onMounted(async () => {
 ```
 
 
+## ЗАДАНИЕ 5: Финальный дашборд (40 мин)
+
+### Цель
+
+Собрать всё в единый дашборд с 3 графиками.
+
+### Структура дашборда
+┌─────────────────────────────────────────────┐
+│ 📊 Прогнозирование продаж │
+│ [Фильтр по дате] [Выбор модели] │
+├──────────────────┬──────────────────────────┤
+│ График 1 │ График 2 │
+│ (Линейный) │ (Столбчатый ошибок) │
+├──────────────────┴──────────────────────────┤
+│ График 3 (Scatter: предсказание vs факт) │
+│ + Метрики качества (MAE, RMSE, MAPE) │
+└─────────────────────────────────────────────┘
+
+text
+
+### Ключевые фичи для реализации
+
+- **Реактивность**: при выборе модели обновляются все графики
+- **Экспорт графика в PNG** (кнопка)
+- **Автообновление данных** (setInterval для имитации реального времени)
+
+### Решение
+
+```vue
+<template>
+  <div class="dashboard">
+    <header>
+      <h1>Прогнозирование продаж</h1>
+      <select v-model="selectedModel">
+        <option value="lr">Linear Regression</option>
+        <option value="svm">SVM</option>
+        <option value="ma">Moving Average</option>
+      </select>
+      <button @click="exportCharts">Экспорт</button>
+    </header>
+    
+    <div class="grid">
+      <div class="chart-card">
+        <LineChart :data="timeSeriesData" />
+      </div>
+      <div class="chart-card">
+        <BarChart :data="errorData" />
+      </div>
+    </div>
+    
+    <div class="chart-card full-width">
+      <ScatterChart :data="scatterData" />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useDataLoader } from '@/composables/useDataLoader'
+import { trainLinearRegression, predict } from '@/ml/linearRegression'
+import { trainSVM, predictSVM } from '@/ml/svm'
+
+const { data, loadCSV } = useDataLoader()
+const selectedModel = ref('lr')
+const models = ref({})
+
+// Вычисляемые данные для графиков
+const timeSeriesData = computed(() => {
+  // Возвращает данные в зависимости от выбранной модели
+})
+
+const errorData = computed(() => {
+  // Возвращает ошибки по месяцам
+})
+
+const scatterData = computed(() => {
+  // Возвращает предсказание vs факт
+})
+
+// Обучение моделей при загрузке
+onMounted(async () => {
+  await loadCSV('/data/sales_forecast.csv')
+  
+  // Обучаем все модели
+  const features = data.value.map(d => [d.weather, d.holiday])
+  const labels = data.value.map(d => d.actual)
+  
+  models.value.lr = await trainLinearRegression(features, labels)
+  // models.value.svm = trainSVM(...)
+  // models.value.ma = movingAverage(...)
+})
+
+// Переключение модели
+watch(selectedModel, (newModel) => {
+  // Обновляем все графики
+})
+</script>
+```
