@@ -21,12 +21,70 @@ cd viz-workshop
 npm install
 ```
 
-# 1.2. Подключение библиотек
+## 1.2. Подключение библиотек
 
-## Вариант A: Chart.js (команда "Оптимисты")
+### Вариант A: Chart.js (команда "Оптимисты")
 
 Установка:
 
 ```bash
 npm install chart.js vue-chartjs
+```
+```javascript
+// main.js - глобальная регистрация
+import { createApp } from 'vue'
+import App from './App.vue'
+import VueChartJs from 'vue-chartjs'
+
+const app = createApp(App)
+app.use(VueChartJs)
+app.mount('#app')
+```
+
+Использование в компоненте:
+
+```vue
+<template>
+  <Line :data="chartData" :options="chartOptions" />
+</template>
+
+<script setup>
+import { Line } from 'vue-chartjs'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+
+const chartData = {
+  labels: ['Янв', 'Фев', 'Мар'],
+  datasets: [{ label: 'Продажи', data: [65, 59, 80] }]
+}
+</script>
+```
+### Вариант B: ECharts (команда "Реалисты")
+
+```
+bash
+npm install echarts
+```
+```
+vue
+<template>
+  <div ref="chartRef" style="width: 100%; height: 400px;"></div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import * as echarts from 'echarts'
+
+const chartRef = ref(null)
+
+onMounted(() => {
+  const chart = echarts.init(chartRef.value)
+  chart.setOption({
+    xAxis: { data: ['Янв', 'Фев', 'Мар'] },
+    yAxis: {},
+    series: [{ type: 'line', data: [65, 59, 80] }]
+  })
+})
+</script>
 ```
