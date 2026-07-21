@@ -56,12 +56,13 @@
 
 | КИМ | Связь с занятием | Файл |
 |---|---|---|
+| Сравнительно-аналитическое эссе: интеграция клиента и сервера и паттерны инференса | 3.1–3.2 | [kim-05-essay-integration-patterns.md](kim-05-essay-integration-patterns.md) |
 | Лабораторная работа: интеграция сервиса инференса в серверное приложение | 3.3 | [kim-01-labrab-inference-client.md](kim-01-labrab-inference-client.md) |
 | Лабораторная работа: развёртывание приложения в контейнерной среде | 3.4 | [kim-02-labrab-production-compose.md](kim-02-labrab-production-compose.md) |
 | Лабораторная работа: конфигурирование обратного прокси-сервера и многостадийная сборка образов | 3.5 | [kim-03-labrab-nginx-multistage.md](kim-03-labrab-nginx-multistage.md) |
 | Самостоятельная работа: развёртывание итогового приложения дисциплины в контейнерной среде | 3.6 | [kim-04-srs-project-deploy.md](kim-04-srs-project-deploy.md) |
 
-Приложения к КИМ размещаются в каталоге [`attachments/`](attachments/), в том числе [спецификация учебного сервиса инференса](attachments/inference-service-spec.md).
+КИМ к занятиям 3.1–3.2 выполняется как текущий письменный контроль после лекций (около 2 а.ч. самостоятельной работы) и не изменяет объём аудиторных часов модуля. Приложения к КИМ размещаются в каталоге [`attachments/`](attachments/), в том числе [спецификация учебного сервиса инференса](attachments/inference-service-spec.md).
 
 ## Структура каталога
 
@@ -72,6 +73,7 @@ M3-integration-deployment/
 ├── kim-02-labrab-production-compose.md
 ├── kim-03-labrab-nginx-multistage.md
 ├── kim-04-srs-project-deploy.md
+├── kim-05-essay-integration-patterns.md
 └── attachments/
     ├── .gitkeep
     └── inference-service-spec.md
