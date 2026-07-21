@@ -326,8 +326,5 @@ onMounted(async () => {
   salesData.value.datasets[1].data = data.value.map(d => d.sales_forecast).slice(0, 12)
 })
 </script>
-```
-export function predictSVM(svm, features) {
-  return svm.predict(features)
-}
+
 ```
