@@ -120,7 +120,7 @@ npm run build     # Сборка для продакшна в папку /dist
 
 ### 2.1. Генерация синтетических данных (раздаточный материал)
 
-#### Файл `data/sales_forecast.csv`
+#### Файл `attachments/sales_forecast.csv`
 
 ```csv
 date,actual,sales_forecast,ml_forecast,weather,holiday
@@ -131,4 +131,4 @@ date,actual,sales_forecast,ml_forecast,weather,holiday
 2024-12-31,180,170,185,15,1
 ```
 
-#### Файл `data/housing.json`
+#### Файл `attachments/housing.json`
