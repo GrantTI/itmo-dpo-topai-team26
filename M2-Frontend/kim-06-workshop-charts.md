@@ -364,3 +364,76 @@ onMounted(async () => {
 })
 </script>
 ```
+
+## Задание 2: Линейная регрессия + прогноз (40 мин)
+
+### Цель
+
+Обучить модель на исторических данных и визуализировать предсказания.
+
+### Шаги
+
+1. Загрузить `housing.json`
+2. Обучить линейную регрессию на 80% данных
+3. Сделать предсказания на 20% тестовых данных
+4. Построить scatter plot: actual vs prediction
+
+### Решение (общее для обеих команд)
+
+```vue
+<template>
+  <div>
+    <ScatterPlot :data="scatterData" />
+    <div class="metrics">
+      <p>MAE: {{ mae.toFixed(2) }}</p>
+      <p>RMSE: {{ rmse.toFixed(2) }}</p>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useDataLoader } from '@/composables/useDataLoader'
+import { trainLinearRegression, predict } from '@/ml/linearRegression'
+
+const { data, loadJSON } = useDataLoader()
+const scatterData = ref({ datasets: [] })
+const mae = ref(0)
+const rmse = ref(0)
+
+onMounted(async () => {
+  await loadJSON('/data/housing.json')
+  
+  // Подготовка данных
+  const features = data.value.map(d => [d.sqft, d.bedrooms])
+  const labels = data.value.map(d => d.actual_price)
+  
+  // Разделение на train/test (80/20)
+  const splitIdx = Math.floor(features.length * 0.8)
+  const trainFeatures = features.slice(0, splitIdx)
+  const trainLabels = labels.slice(0, splitIdx)
+  const testFeatures = features.slice(splitIdx)
+  const testActual = labels.slice(splitIdx)
+  
+  // Обучение
+  const model = await trainLinearRegression(trainFeatures, trainLabels)
+  
+  // Предсказания
+  const predictions = testFeatures.map(f => predict(model, f))
+  
+  // Визуализация
+  scatterData.value = {
+    datasets: [{
+      label: 'Actual vs Predicted',
+      data: testActual.map((actual, i) => ({ x: actual, y: predictions[i] })),
+      backgroundColor: 'rgba(75, 192, 192, 0.6)'
+    }]
+  }
+  
+  // Расчет метрик
+  mae.value = testActual.reduce((sum, val, i) => sum + Math.abs(val - predictions[i]), 0) / testActual.length
+  rmse.value = Math.sqrt(testActual.reduce((sum, val, i) => sum + (val - predictions[i]) ** 2, 0) / testActual.length
+})
+</script>
+```
+
