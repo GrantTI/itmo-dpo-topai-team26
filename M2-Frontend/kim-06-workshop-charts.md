@@ -206,3 +206,56 @@ export function predict(model, newFeatures) {
   return output.dataSync()[0]
 }
 ```
+
+## 3.2. Кластеризация K-Means (средняя) — простая реализация
+
+```javascript
+// ml/kmeans.js
+export class KMeans {
+  constructor(k = 3, maxIter = 100) {
+    this.k = k
+    this.maxIter = maxIter
+    this.centroids = []
+  }
+
+  fit(data) {
+    // Инициализация центроидов (случайные точки из данных)
+    const shuffled = [...data].sort(() => Math.random() - 0.5)
+    this.centroids = shuffled.slice(0, this.k)
+
+    for (let iter = 0; iter < this.maxIter; iter++) {
+      // Назначаем кластеры
+      const clusters = Array.from({ length: this.k }, () => [])
+      data.forEach(point => {
+        const distances = this.centroids.map(c => this.distance(point, c))
+        const clusterIdx = distances.indexOf(Math.min(...distances))
+        clusters[clusterIdx].push(point)
+      })
+
+      // Обновляем центроиды
+      const newCentroids = clusters.map(cluster => {
+        if (cluster.length === 0) return this.centroids[0]
+        return cluster.reduce((acc, point) => 
+          acc.map((val, i) => val + point[i] / cluster.length), 
+          Array(data[0].length).fill(0)
+        )
+      })
+
+      // Проверка сходимости
+      if (this.centroids.every((c, i) => this.distance(c, newCentroids[i]) < 0.001)) {
+        break
+      }
+      this.centroids = newCentroids
+    }
+  }
+
+  predict(point) {
+    const distances = this.centroids.map(c => this.distance(point, c))
+    return distances.indexOf(Math.min(...distances))
+  }
+
+  distance(a, b) {
+    return Math.sqrt(a.reduce((sum, val, i) => sum + (val - b[i]) ** 2, 0))
+  }
+}
+```
