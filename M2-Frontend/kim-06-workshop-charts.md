@@ -328,3 +328,39 @@ onMounted(async () => {
 </script>
 
 ```
+
+Команда ECharts:
+
+```
+vue
+<template>
+  <div ref="chartRef" style="height: 400px;"></div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import * as echarts from 'echarts'
+import { useDataLoader } from '@/composables/useDataLoader'
+
+const chartRef = ref(null)
+const { data, loadCSV } = useDataLoader()
+
+onMounted(async () => {
+  await loadCSV('/data/sales_forecast.csv')
+  
+  const chart = echarts.init(chartRef.value)
+  const months = data.value.map(d => d.date).slice(0, 12)
+  
+  chart.setOption({
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['Факт', 'Прогноз'] },
+    xAxis: { data: months },
+    yAxis: {},
+    series: [
+      { name: 'Факт', type: 'bar', data: data.value.map(d => d.actual).slice(0, 12) },
+      { name: 'Прогноз', type: 'bar', data: data.value.map(d => d.sales_forecast).slice(0, 12) }
+    ]
+  })
+})
+</script>
+```
