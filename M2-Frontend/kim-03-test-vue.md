@@ -18,11 +18,11 @@ D) В файле index.html добавить мета-тег proxy
 
 <details> <summary>Показать ответ</summary>
 Правильный ответ: B)
-</details>
+
 
 Настройка прокси выполняется в vite.config.js через объект server.proxy. Пример:
 
-javascript
+```javascript
 server: {
   proxy: {
     '/api': {
@@ -31,7 +31,9 @@ server: {
     }
   }
 }
+```
 </details>
+
 
 ## Вопрос 3. Какой хук используется для выполнения запросов к FastAPI после монтирования компонента?
 
@@ -45,11 +47,10 @@ D) beforeMount()
 
 <details> <summary>Показать ответ</summary>
 Правильный ответ: C)
-</details>
-
 onMounted() — это хук Composition API, который выполняется после того, как компонент был смонтирован в DOM. Это идеальное место для выполнения асинхронных запросов к API.
 
 </details>
+
 ## Вопрос 4. Как правильно обработать отправку формы в Vue.js 3 с отправкой данных на FastAPI?
 
 A) Использовать v-model и @submit.prevent с fetch
@@ -66,6 +67,7 @@ D) Использовать v-text и @input
 Для обработки формы используется v-model для двусторонней привязки данных полей ввода, а @submit.prevent отменяет стандартную отправку формы и позволяет отправить данные через fetch или axios.
 
 </details>
+
 ## Вопрос 5. Какой пакет нужно установить для интеграции axios в проект Vue.js?
 
 A) npm install vue-axios
@@ -82,6 +84,7 @@ D) npm install vue-resource
 npm install axios устанавливает axios. Затем его можно импортировать в компонентах: import axios from 'axios'. Это стандартный HTTP-клиент для работы с API.
 
 </details>
+
 ## Вопрос 6. Как правильно добавить библиотеку Chart.js в проект Vue.js 3?
 
 A) import Chart from 'chart.js' в компоненте
