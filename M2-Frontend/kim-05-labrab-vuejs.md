@@ -62,6 +62,7 @@ scikit-learn==1.3.2
 pydantic==2.5.0
 ```
 <details> <summary><b>Код: backend/app/main.py (упрощенный)</b></summary>
+    ```
 python
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -93,6 +94,8 @@ class ModelMetrics(BaseModel):
     coefficients: Optional[List[float]] = None
     feature_importance: Optional[Dict[str, float]] = None
     processed_samples: int = 0
+```
+</details>
 
 # Доступные модели (упрощенные)
 AVAILABLE_MODELS = {
