@@ -9,6 +9,10 @@
 - **Workshop (мастерская)** совместное выполнение командами решения поставленной задачи. Предполагают одинаковые по типу задачи, но выполнение с помощью различных средств.
 | Элемент | Компетенция | индикатор | Уровень | Дескриптор | Форма контроля | Вид КИМ | Ссылка | 
 |:---:|:---|:---|:---:|:---:|:---:|:---:|:---:|
+| * | * | * | * | * | * | * | * |
+
+
+
 | 2.1 | HTML. CSS. Javascript. Стек технологий для frontend ML моделей. | Язык гипертекстовой разметки HTML. Каскадные таблицы стилей CSS. Базовый синтаксис JavaScript. | Л | 4 | LC-5 | LC-5.1 | Б | - [Тест по HTML и CSS](https://github.com/GrantTI/itmo-dpo-topai-team26/blob/main/M2-Frontend/kim-01-test-html-css.md)  <br> - [Тест по Javascript](https://github.com/GrantTI/itmo-dpo-topai-team26/blob/main/M2-Frontend/kim-02-test-javascript.md) |
 | 2.2 | Фреймворк Vue.js | Vue.js 3: настройка Vite, Composition API, компоненты, маршрутизация. | Л | 2 | LC-5 | LC-5.1 | С | Тест по Vue.js |
 | 2.3 | Визуализация данных в ML моделях | Реализация загрузки файлов (csv, json). Предпросмотр данных и визуализация статистики. | ЛР | 4 | LC-5 | LC-5.1 | С | - [Лабораторная работа. Визуализация данных. Работа с HTML и CSS](https://github.com/GrantTI/itmo-dpo-topai-team26/blob/main/M2-Frontend/kim-03-labrab-html-css-js.md) <br> - [Лабораторная работа. Визуализация данных. JavaScript](https://github.com/GrantTI/itmo-dpo-topai-team26/blob/main/M2-Frontend/kim-04-labrab-javascript.md)|
