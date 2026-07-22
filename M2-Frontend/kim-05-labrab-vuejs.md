@@ -23,8 +23,6 @@
 - **HTTP** – основные запросы (получение списка моделей, отправка параметров, получение результатов)
 
 ## Ключевые концепции Vue.js 3
-# Основные концепции Vue.js
-
 | Концепция | Назначение |
 |-----------|------------|
 | `v-model` | Двусторонняя привязка данных между элементом ввода и состоянием компонента |
@@ -38,17 +36,22 @@
 ## Ход работы
 
 ### Этап 1. Настройка проекта (30 минут)
-1.1. Создание структуры проекта
+**1.1. Создание структуры проекта**
+```
 <details> <summary><b>Код: Создание структуры</b></summary>
-bash
+
+    bash
 mkdir ml-interface-lab
 cd ml-interface-lab
 mkdir -p backend/app backend/data
 mkdir -p frontend/src/components frontend/src/api
 </details>
-1.2. Настройка FastAPI бэкенда
-backend/requirements.txt:
+```
 
+**1.2. Настройка FastAPI бэкенда**
+
+backend/requirements.txt:
+```
 text
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
@@ -57,6 +60,7 @@ pandas==2.1.3
 numpy==1.26.2
 scikit-learn==1.3.2
 pydantic==2.5.0
+```
 <details> <summary><b>Код: backend/app/main.py (упрощенный)</b></summary>
 python
 from fastapi import FastAPI, File, UploadFile
