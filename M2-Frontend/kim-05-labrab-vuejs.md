@@ -326,6 +326,9 @@ vue
     </div>
   </div>
 </template>
+```
+</details>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -375,7 +378,7 @@ onMounted(loadModels)
 
 
 
-2.2. API клиент
+### 2.2. API клиент
 <details> <summary><b>Код: frontend/src/api/index.js</b></summary>
 javascript
 import axios from 'axios'
