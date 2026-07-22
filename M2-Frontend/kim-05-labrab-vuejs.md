@@ -540,20 +540,28 @@ async def train_model(config: ModelConfig):
     metrics["model_name"] = AVAILABLE_MODELS[config.model_id]["name"]
     metrics["processed_samples"] = len(service.X_train) + len(service.X_test)
     return metrics
+```
 </details>
-Этап 4. Запуск и тестирование (30 минут)
-4.1. Запуск бэкенда
+
+## Этап 4. Запуск и тестирование (30 минут)
+### 4.1. Запуск бэкенда
+```
 bash
 cd backend
 pip install -r requirements.txt
 python -m app.main
-4.2. Запуск фронтенда
+```
+### 4.2. Запуск фронтенда
+```
 bash
 cd frontend
 npm install
 npm run dev
-4.3. Тестовые данные
+```
+### 4.3. Тестовые данные
 <details> <summary><b>Код: test_data.csv</b></summary>
+
+```
 csv
 feature1,feature2,feature3,target
 1.2,3.4,5.6,0
@@ -566,4 +574,5 @@ feature1,feature2,feature3,target
 8.9,1.2,3.4,1
 9.0,2.3,4.5,0
 1.1,3.3,5.5,1
+```
 </details>
