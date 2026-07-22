@@ -38,8 +38,6 @@
 ### Этап 1. Настройка проекта (30 минут)
 **1.1. Создание структуры проекта**
 ```
-<details> <summary><b>Код: Создание структуры</b></summary>
-
     bash
 mkdir ml-interface-lab
 cd ml-interface-lab
@@ -61,8 +59,8 @@ numpy==1.26.2
 scikit-learn==1.3.2
 pydantic==2.5.0
 ```
-<details> <summary><b>Код: backend/app/main.py (упрощенный)</b></summary>
-    ```
+
+```
 python
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -97,7 +95,9 @@ class ModelMetrics(BaseModel):
 ```
 </details>
 
-# Доступные модели (упрощенные)
+### Доступные модели
+
+```
 AVAILABLE_MODELS = {
     "linear_regression": {
         "name": "Линейная регрессия",
@@ -163,7 +163,8 @@ async def upload_data(file: UploadFile = File(...)):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-</details>
+```
+
 1.3. Настройка Vue.js 3
 frontend/package.json:
 
