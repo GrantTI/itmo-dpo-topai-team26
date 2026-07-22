@@ -275,96 +275,20 @@ const api = {
 
 export default api
 </details>
-Этап 3. Реализация бэкенда с ML моделями (1.5 часа)
-<details> <summary><b>Код: backend/app/services/ml_service.py</b></summary>
-python
-from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-import pandas as pd
-import time
 
-class MLService:
-    def __init__(self):
-        self.X_train = None
-        self.X_test = None
-        self.y_train = None
-        self.y_test = None
-    
-    def load_data(self, file_path):
-        df = pd.read_csv(file_path)
-        X = df.iloc[:, :-1]
-        y = df.iloc[:, -1]
-        
-        # Преобразование категориальных данных
-        X = pd.get_dummies(X)
-        
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
-        
-        scaler = StandardScaler()
-        self.X_train = scaler.fit_transform(self.X_train)
-        self.X_test = scaler.transform(self.X_test)
-        
-        return {"samples": len(df), "features": X.shape[1]}
-    
-    def train_random_forest(self, params):
-        start = time.time()
-        model = RandomForestClassifier(
-            n_estimators=int(params.get('n_estimators', 100)),
-            max_depth=int(params.get('max_depth', 10)),
-            random_state=42
-        )
-        model.fit(self.X_train, self.y_train)
-        y_pred = model.predict(self.X_test)
-        
-        return {
-            "accuracy": accuracy_score(self.y_test, y_pred),
-            "precision": precision_score(self.y_test, y_pred, average='weighted'),
-            "recall": recall_score(self.y_test, y_pred, average='weighted'),
-            "f1_score": f1_score(self.y_test, y_pred, average='weighted'),
-            "feature_importance": dict(zip(
-                [f"f{i}" for i in range(len(model.feature_importances_))],
-                model.feature_importances_.tolist()
-            )),
-            "training_time": time.time() - start
-        }
-    
-    def train_linear_regression(self, params):
-        start = time.time()
-        model = LinearRegression(
-            fit_intercept=params.get('fit_intercept', True)
-        )
-        model.fit(self.X_train, self.y_train)
-        
-        return {
-            "r2_score": model.score(self.X_test, self.y_test),
-            "coefficients": model.coef_.tolist(),
-            "training_time": time.time() - start
-        }
-    
-    def train_svm(self, params):
-        start = time.time()
-        model = SVC(
-            C=params.get('C', 1.0),
-            kernel=params.get('kernel', 'rbf'),
-            random_state=42
-        )
-        model.fit(self.X_train, self.y_train)
-        y_pred = model.predict(self.X_test)
-        
-        return {
-            "accuracy": accuracy_score(self.y_test, y_pred),
-            "precision": precision_score(self.y_test, y_pred, average='weighted'),
-            "recall": recall_score(self.y_test, y_pred, average='weighted'),
-            "f1_score": f1_score(self.y_test, y_pred, average='weighted'),
-            "training_time": time.time() - start
-        }
-</details>
+## Этап 3. Реализация бэкенда с ML моделями (1.5 часа)
+Создайте класс `MLService` с методом `load_data()`, который читает CSV, разделяет признаки и целевую переменную, преобразует категории через `pd.get_dummies()`, масштабирует данные и делит их на `train`/`test` выборки.
+
+Разработайте отдельные методы для каждой модели (`train_random_forest`, `train_linear_regression`, `train_svm`), которые принимают словарь с гиперпараметрами, создают экземпляр модели из `scikit-learn`, обучают её на подготовленных данных и вычисляют метрики.
+
+Используйте в методах единый паттерн: засекайте время через `time.time()`, выполняйте `fit()` и `predict()`, рассчитывайте метрики (accuracy, precision, recall, f1_score, r2_score, коэффициенты, важность признаков) и возвращайте результат в виде словаря.
+
+Подключите класс к API в `main.py`: в эндпоинте загрузки создавайте экземпляр сервиса и вызывайте `load_data()`, в эндпоинте обучения выбирайте нужный метод по model_id и передавайте параметры из запроса.
+
+Добавьте обработку ошибок: проверяйте наличие загруженных данных, существование модели и оборачивайте обучение в `try/except`, а также установите зависимости `scikit-learn`, pandas и numpy для работы сервиса.
+
+
+
 Обновленный backend/app/main.py (добавление реального обучения)
 <details> <summary><b>Код: Обновленный main.py</b></summary>
 python
