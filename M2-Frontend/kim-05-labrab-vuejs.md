@@ -168,6 +168,7 @@ if __name__ == "__main__":
 1.3. Настройка Vue.js 3
 frontend/package.json:
 
+```
 json
 {
   "name": "ml-interface",
@@ -185,8 +186,10 @@ json
     "vite": "^5.0.0"
   }
 }
+```
 frontend/vite.config.js:
 
+```
 javascript
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -203,8 +206,11 @@ export default defineConfig({
     }
   }
 })
+```
+
 frontend/index.html:
 
+```
 html
 <!DOCTYPE html>
 <html lang="ru">
@@ -217,22 +223,27 @@ html
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
-Этап 2. Разработка Vue.js компонентов (2 часа)
-2.1. Основной компонент
-<details> <summary><b>Код: frontend/src/main.js</b></summary>
+```
+
+## Этап 2. Разработка Vue.js компонентов (2 часа)
+
+### 2.1. Основной компонент
+
+```
 javascript
 import { createApp } from 'vue'
 import App from './App.vue'
 createApp(App).mount('#app')
-</details><details> <summary><b>Код: frontend/src/App.vue</b></summary>
+```
+```
 vue
 <template>
   <div>
-    <h1>🤖 Выбор ML модели</h1>
+    <h1>Выбор ML модели</h1>
     
     <!-- Загрузка данных -->
     <div>
-      <h2>📊 Загрузка данных</h2>
+      <h2>Загрузка данных</h2>
       <input type="file" @change="uploadFile" accept=".csv" />
       <div v-if="fileInfo">
         <p>Файл: {{ fileInfo.filename }} ({{ fileInfo.rows }} строк)</p>
@@ -241,7 +252,7 @@ vue
 
     <!-- Выбор модели -->
     <div>
-      <h2>🎯 Модель</h2>
+      <h2>Модель</h2>
       <select v-model="selectedModelId" @change="onModelChange">
         <option value="">Выберите модель</option>
         <option v-for="(model, id) in models" :key="id" :value="id">
@@ -252,7 +263,7 @@ vue
 
     <!-- Параметры модели -->
     <div v-if="selectedModel">
-      <h2>⚙️ Параметры</h2>
+      <h2>Параметры</h2>
       <div v-for="param in selectedModel.params" :key="param.name">
         <label>
           {{ param.name }}
@@ -277,12 +288,12 @@ vue
 
     <!-- Кнопка обучения -->
     <button @click="trainModel" :disabled="!selectedModelId || !fileInfo">
-      🚀 Обучить
+      Обучить
     </button>
 
     <!-- Результаты -->
     <div v-if="metrics">
-      <h2>📈 Результаты</h2>
+      <h2>Результаты</h2>
       <p>Модель: {{ metrics.model_name }}</p>
       <p v-if="metrics.accuracy">Точность: {{ metrics.accuracy }}</p>
       <p v-if="metrics.precision">Precision: {{ metrics.precision }}</p>
@@ -352,7 +363,9 @@ const trainModel = async () => {
 
 onMounted(loadModels)
 </script>
-</details>
+```
+
+
 2.2. API клиент
 <details> <summary><b>Код: frontend/src/api/index.js</b></summary>
 javascript
