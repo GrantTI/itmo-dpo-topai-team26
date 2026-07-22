@@ -121,7 +121,13 @@ AVAILABLE_MODELS = {
         ]
     }
 }
+```
 
+# Backend (FastAPI) — пример кода
+
+<details> <summary>Описание эндпоинтов</summary>
+    
+```python
 @app.get("/api/models")
 async def get_models():
     return {"models": AVAILABLE_MODELS}
@@ -164,9 +170,7 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
-
-1.3. Настройка Vue.js 3
-frontend/package.json:
+</details>
 
 ```
 json
@@ -187,6 +191,7 @@ json
   }
 }
 ```
+
 frontend/vite.config.js:
 
 ```
@@ -235,6 +240,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 createApp(App).mount('#app')
 ```
+
+<details> <summary>Показать решение vue</summary>
 ```
 vue
 <template>
@@ -364,6 +371,8 @@ const trainModel = async () => {
 onMounted(loadModels)
 </script>
 ```
+</details>
+
 
 
 2.2. API клиент
