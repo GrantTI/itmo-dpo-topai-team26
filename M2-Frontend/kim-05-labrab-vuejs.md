@@ -288,59 +288,6 @@ export default api
 Добавьте обработку ошибок: проверяйте наличие загруженных данных, существование модели и оборачивайте обучение в `try/except`, а также установите зависимости `scikit-learn`, pandas и numpy для работы сервиса.
 
 
-
-Обновленный backend/app/main.py (добавление реального обучения)
-<details> <summary><b>Код: Обновленный main.py</b></summary>
-python
-from app.services.ml_service import MLService
-
-data_storage = {}
-
-@app.post("/api/upload-data")
-async def upload_data(file: UploadFile = File(...)):
-    import aiofiles
-    import os
-    
-    os.makedirs("data", exist_ok=True)
-    file_path = f"data/{file.filename}"
-    
-    async with aiofiles.open(file_path, 'wb') as out_file:
-        content = await file.read()
-        await out_file.write(content)
-    
-    service = MLService()
-    info = service.load_data(file_path)
-    data_storage[file.filename] = service
-    
-    return {
-        "filename": file.filename,
-        "rows": info["samples"],
-        "columns": info["features"]
-    }
-
-@app.post("/api/train")
-async def train_model(config: ModelConfig):
-    if not data_storage:
-        raise HTTPException(status_code=400, detail="Данные не загружены")
-    
-    service = list(data_storage.values())[0]
-    
-    methods = {
-        "linear_regression": service.train_linear_regression,
-        "random_forest": service.train_random_forest,
-        "svm": service.train_svm
-    }
-    
-    if config.model_id not in methods:
-        raise HTTPException(status_code=400, detail="Неизвестная модель")
-    
-    metrics = methods[config.model_id](config.params)
-    metrics["model_name"] = AVAILABLE_MODELS[config.model_id]["name"]
-    metrics["processed_samples"] = len(service.X_train) + len(service.X_test)
-    return metrics
-```
-</details>
-
 ## Этап 4. Запуск и тестирование (30 минут)
 ### 4.1. Запуск бэкенда
 ```
