@@ -7,3 +7,4 @@
 | Модуль 2 — Frontend | Тесты | [ref](M2-Frontend-kim-labrab.md) |
 | Модуль 2 — Frontend | Лабораторные работы | [ref](M2-Frontend-kim-labrab.md) |
 | Модуль 2 — Frontend | Workshop | [ref](M2-Frontend-kim-labrab.md) |
+| Модуль 4 — Проект | Проектная рабоа | [ref](Project.md) |
