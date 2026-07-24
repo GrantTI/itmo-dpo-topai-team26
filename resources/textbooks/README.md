@@ -1,13 +1,20 @@
 # Учебники
 
+# Учебники
+
 | Название | Аннотация | Связанные КИМ | Доступ | Лицензия / условия | Дата проверки |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **htmlbook.ru** | Русскоязычный сайт, посвященный HTML и CSS. Содержит справочники, учебные курсы (например, "HTML на практике", "CSS на примерах"). Подходит для  среднего уровня. | [M2-Frontend/kim-01-test-html-css.md](M2-Frontend/kim-01-test-html-css.md), [M2-Frontend/kim-03-labrab-html-css.md](M2-Frontend/kim-03-labrab-html-css.md) | https://htmlbook.ru | Бесплатный, открытый доступ. | 2026-07-24 |
 | **Современный учебник JavaScript** | Один из самых полных и авторитетных русскоязычных онлайн-учебников по JavaScript. Охватывает язык от основ до продвинутых тем (ООП, асинхронность, работа с DOM, сетевые запросы, различные Web API). Регулярно обновляется . | [M2-Frontend/kim-02-test-javascript.md](M2-Frontend/kim-02-test-javascript.md), [M2-Frontend/kim-04-labrab-javascript.md](M2-Frontend/kim-04-labrab-javascript.md) | https://learn.javascript.ru | Бесплатный, открытый доступ. Предлагаются также платные онлайн-курсы с преподавателем . | 2026-07-24 |
 | **Курс по JavaScript на Metanit** | Структурированный курс по JavaScript, разбитый на главы. Последовательно рассматриваются основы языка, ООП, работа с DOM, события, формы, асинхронность, Fetch API, Canvas и множество других Web API. Хорошо подходит для систематического изучения. | [M2-Frontend/kim-02-test-javascript.md](M2-Frontend/kim-02-test-javascript.md), [M2-Frontend/kim-04-labrab-javascript.md](M2-Frontend/kim-04-labrab-javascript.md) | https://metanit.com/web/javascript/ | Бесплатный, открытый доступ. | 2026-07-24 |
 | **Официальная документация Vue.js 3** | Официальное руководство по фреймворку Vue.js 3. Содержит введение, подробное описание концепций (реактивность, компоненты), двух стилей API (Options и Composition), инструкции по установке и использованию с различными инструментами (Vite) [citation:Введение]. | [M2-Frontend/kim-05-labrab-vuejs.md](M2-Frontend/kim-05-labrab-vuejs.md), [M2-Frontend/kim-06-workshop-charts.md](M2-Frontend/kim-06-workshop-charts.md), [M2-Frontend/kim-03-test-vue.md](M2-Frontend/kim-03-test-vue.md) | https://ru.vuejs.org/guide/introduction.html | Бесплатный, открытый доступ. | 2026-07-24 |
-| **Chart.js** | Официальный сайт библиотеки Chart.js. Содержит документацию, примеры использования и руководства по созданию различных типов графиков (линейные, столбчатые, круговые и др.). Позиционируется как простая и гибкая библиотека для построения диаграмм. | [M2-Frontend/kim-06-workshop-charts.md](https://ссылка на файл) (команда "Оптимисты") | https://www.chartjs.org | Бесплатная, с открытым исходным кодом (лицензия MIT). | 2026-07-24 |
-| **Apache ECharts** | Официальный сайт библиотеки ECharts. Предоставляет документацию, примеры и руководства. Отличается мощным движком рендеринга, поддержкой более 20 типов диаграмм, работой с большими объемами данных и продвинутой аналитикой [citation:ECharts: A Declarative Framework for Rapid Construction of Web-based Visualization]. | [M2-Frontend/kim-06-workshop-charts.md](https://ссылка на файл) (команда "Реалисты") | https://echarts.apache.org/en/index.html | Бесплатная, с открытым исходным кодом (лицензия Apache 2.0). | 2026-07-24 |
+| **Chart.js** | Официальный сайт библиотеки Chart.js. Содержит документацию, примеры использования и руководства по созданию различных типов графиков (линейные, столбчатые, круговые и др.). Позиционируется как простая и гибкая библиотека для построения диаграмм. | [M2-Frontend/kim-06-workshop-charts.md](M2-Frontend/kim-06-workshop-charts.md) | https://www.chartjs.org | Бесплатная, с открытым исходным кодом (лицензия MIT). | 2026-07-24 |
+| **Apache ECharts** | Официальный сайт библиотеки ECharts. Предоставляет документацию, примеры и руководства. Отличается мощным движком рендеринга, поддержкой более 20 типов диаграмм, работой с большими объемами данных и продвинутой аналитикой [citation:ECharts: A Declarative Framework for Rapid Construction of Web-based Visualization]. | [M2-Frontend/kim-06-workshop-charts.md](M2-Frontend/kim-06-workshop-charts.md) | https://echarts.apache.org/en/index.html | Бесплатная, с открытым исходным кодом (лицензия Apache 2.0). | 2026-07-24 |
+
+## Требования к добавлению
+
+Указывайте полное библиографическое описание. Не размещайте защищенные авторским правом файлы без разрешения правообладателя.
+
 
 ## Требования к добавлению
 
