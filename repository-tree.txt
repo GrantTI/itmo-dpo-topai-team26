@@ -1,74 +1,101 @@
 .
-├── data/
-│   ├── competency-catalog.csv
-│   ├── krm-v3.0.xlsx
-│   ├── README.md
-│   └── role-competency-matrix.csv
-├── docs/
-│   ├── quality-checklist.md
-│   ├── README.md
-│   ├── repository_example.pdf
-│   └── rpd.md
-├── Exam/
-│   ├── attachments/
-│   │   └── .gitkeep
-│   └── README.md
-├── M1-module-name/
-│   ├── attachments/
-│   │   └── .gitkeep
-│   ├── kim-01-practical-work.md
-│   ├── README.md
-│   └── rubric-01.md
-├── M2-module-name/
-│   ├── attachments/
-│   │   └── .gitkeep
-│   ├── kim-01-practical-work.md
-│   ├── kim-01-template.md
-│   └── README.md
-├── methodical-guidelines/
-│   ├── students/
-│   │   └── README.md
-│   ├── teachers-assessment/
-│   │   └── README.md
-│   ├── teachers-resources/
-│   │   └── README.md
-│   └── README.md
-├── other/
-│   └── README.md
-├── Project/
-│   ├── attachments/
-│   │   └── .gitkeep
-│   └── README.md
-├── resources/
-│   ├── benchmarks/
-│   │   └── README.md
-│   ├── datasets/
-│   │   └── README.md
-│   ├── llm-prompts/
-│   │   └── README.md
-│   ├── other/
-│   │   └── README.md
-│   ├── papers/
-│   │   └── README.md
-│   ├── problem-banks/
-│   │   └── README.md
-│   ├── software/
-│   │   └── python-libs/
-│   │       └── README.md
-│   ├── test-banks/
-│   │   └── README.md
-│   ├── textbooks/
-│   │   └── README.md
-│   └── README.md
-├── team/
-│   ├── images/
-│   │   └── .gitkeep
-│   └── README.md
-├── tools/
-│   ├── README.md
-│   └── validate_repository.py
-├── .gitignore
-├── CONTRIBUTING.md
-├── LICENSE.md
-├── README.md
-└── validation-report.txt
+│   .gitignore
+│   CONTRIBUTING.md
+│   LICENSE
+│   LICENSE.md
+│   README.md
+│   repository-tree.txt
+│   repository-tree1.txt
+├───data
+│       krm-v3.0.xlsx
+│       README.md
+├───docs
+│       quality-checklist.md
+│       README.md
+│       rpd.md
+├───Exam
+│   │   README.md
+│   └───attachments
+│           .gitkeep
+├───M1-Backend
+│   │   kim-01-model_c4.md
+│   │   kim-02-labrab_rest_api.md
+│   │   README.md
+├───M2-Frontend
+│   │   kim-01-test-html-css.md
+│   │   kim-02-test-javascript.md
+│   │   kim-03-labrab-html-css.md
+│   │   kim-03-test-vue.md
+│   │   kim-04-labrab-javascript.md
+│   │   kim-05-labrab-vuejs.md
+│   │   kim-06-workshop-charts.md
+│   │   README.md
+│   └───attachments
+│           .gitkeep
+│           customers.csv
+│           housing.json
+│           sales_forecast.csv
+├───M3-integration-deployment
+│   │   kim-01-labrab-client-server-integration.md
+│   │   kim-02-labrab-production-compose.md
+│   │   kim-03-labrab-nginx-multistage.md
+│   │   kim-04-srs-project-deploy.md
+│   │   kim-05-essay-integration-patterns.md
+│   │   README.md
+│   └───attachments
+│           .gitkeep
+├───M4-Project
+│   │   M4-resources.md
+│   │   project-tasks.md
+│   │   README.md
+│   └───attachments
+│           .gitkeep
+├───methodical-guidelines
+│   │   README.md
+│   ├───students
+│   │       M1-Backend-kim-01.md
+│   │       M1-Backend-kim-02.md
+│   │       M2-Frontend-kim-labrab.md
+│   │       M2-Frontend-kim-tests.md
+│   │       M2-Frontend-workshop.md
+│   │       M3-integration-kim-01-labrab.md
+│   │       M3-integration-kim-02-labrab.md
+│   │       M3-integration-kim-03-labrab.md
+│   │       M3-integration-kim-04-srs.md
+│   │       M3-integration-kim-essay.md
+│   │       M4-Project.md
+│   │       README.md
+│   ├───teachers-assessment
+│   │       M1-Backend.md
+│   │       M2-Frontend.md
+│   │       M4-Project.md
+│   │       README.md
+│   └───teachers-resources
+│           README.md
+├───other
+│       README.md
+├───resources
+│   │   README.md
+│   ├───benchmarks
+│   │       README.md
+│   ├───datasets
+│   │       README.md
+│   ├───llm-prompts
+│   │       README.md
+│   ├───other
+│   │       README.md
+│   ├───papers
+│   │       README.md
+│   ├───problem-banks
+│   │       README.md
+│   ├───software
+│   │   └───python-libs
+│   │           README.md
+│   ├───test-banks
+│   │       README.md
+│   └───textbooks
+│           README.md
+└───team
+    │   README.md
+    └───images
+            .gitkeep
