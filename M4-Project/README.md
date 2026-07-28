@@ -65,7 +65,7 @@
 
 **Итого:** 100 баллов
 
-Детализация критериев оценивания располагается в [файле](../methodical-guidelines/teachers-assessment/Project.md)
+Детализация критериев оценивания располагается в [файле](../methodical-guidelines/teachers-assessment/M4-Project.md)
 
 ### 6. Шкала оценивания
 - **86–100 баллов** — отлично.
