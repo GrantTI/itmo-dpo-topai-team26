@@ -9,7 +9,6 @@
 |[M2-Frontend](../M2-Frontend/README.md)||||
 |[M3-интерграция и развертывание](../M3-integration-deployment/README.md)||||
 |[M4-Проект](../M4-Project/README.md)|Датасеты|[datasets](datasets/README.md)|Датасеты для задач машинного обучения для реализации в модуле 4-Проект|
----
 
 ## Распределение ресурсов по типам
 
