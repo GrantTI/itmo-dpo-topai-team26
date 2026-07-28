@@ -1,4 +1,4 @@
-
+# Методические указания преподавателям по использованию ресурсов
 ## Общие рекомендации
 
 Данный раздел содержит рекомендации по подбору, подготовке и использованию информационных ресурсов для проведения лабораторных работ по дисциплине **«Разработка и развертывание клиент-серверных приложений с ML-компонентами»**.
@@ -158,4 +158,4 @@
 -   [Папка с ресурсами](https://github.com/ssonnyas/itmo-dpo-topai-team26/tree/main/resources)
 -   [Рабочая программа дисциплины](https://github.com/ssonnyas/itmo-dpo-topai-team26/blob/main/docs/rpd.md)
 -   [Методические указания студентам](https://github.com/ssonnyas/itmo-dpo-topai-team26/tree/main/methodical-guidelines)
--   [Материалы для экзамена](https://github.com/ssonnyas/itmo-dpo-topai-team26/tree/main/Exam)# Методические указания преподавателям по использованию ресурсов
+-   [Материалы для экзамена](https://github.com/ssonnyas/itmo-dpo-topai-team26/tree/main/Exam)
