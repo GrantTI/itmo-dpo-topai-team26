@@ -3,12 +3,13 @@
 
 ## Распределение ресурсов по модулям
 
-|Модуль|Тип|Раздел|Описание|
+| Модуль | Тип | Раздел | Описание |
 |------|---|------|--------|
-|[M1-Backend](../M1-Backend/README.md)||||
-|[M2-Frontend](../M2-Frontend/README.md)||||
-|[M3-интерграция и развертывание](../M3-integration-deployment/README.md)||||
-|[M4-Проект](../M4-Project/README.md)|Датасеты|[datasets](datasets/README.md)|Датасеты для задач машинного обучения для реализации в модуле 4-Проект|
+| [M1-Backend](../M1-Backend/README.md) | Python-библиотеки | [software/python-libs](software/python-libs/README.md) | FastAPI, научный стек Python и сопутствующие средства для лабораторной работы модуля 1 |
+| [M1-Backend](../M1-Backend/README.md) | Прочее | [other](other/README.md) | Чек-лист принципов разработки (вспомогательный материал) |
+| [M2-Frontend](../M2-Frontend/README.md) | Учебники | [textbooks](textbooks/README.md) | HTML, CSS, JavaScript, Vue.js, библиотеки визуализации |
+| [M3-integration-deployment](../M3-integration-deployment/README.md) | Python-библиотеки / платформы | [software/python-libs](software/python-libs/README.md) | Docker и связанные средства контейнеризации (используются также в модулях 1 и 3) |
+| [M4-Project](../M4-Project/README.md) | Датасеты | [datasets](datasets/README.md) | Датасеты для задач машинного обучения в проектной работе |
 
 ## Распределение ресурсов по типам
 
